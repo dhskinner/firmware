@@ -150,6 +150,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BMA423_ADDR 0x19
 #define LSM6DS3_ADDR 0x6A
 #define BMX160_ADDR 0x69
+#define ICM20948_ADDR 0x69
+#define ICM20948_ADDR_ALT 0x68
 
 // -----------------------------------------------------------------------------
 // LED
@@ -213,7 +215,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WIRE_INTERFACES_COUNT
 // Officially an NRF52 macro
 // Repurposed cross-platform to identify devices using Wire1
-#if defined(I2C_SDA1) || defined(PIN_WIRE_SDA)
+#if defined(I2C_SDA1) || defined(PIN_WIRE1_SDA)
 #define WIRE_INTERFACES_COUNT 2
 #elif HAS_WIRE
 #define WIRE_INTERFACES_COUNT 1

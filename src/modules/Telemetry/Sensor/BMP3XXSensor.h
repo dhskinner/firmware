@@ -31,6 +31,9 @@ class BMP3XXSingleton : public Adafruit_BMP3XX
     // Singletons should not be assignable.
     void operator=(const BMP3XXSingleton &) = delete;
 
+    // Initialise with common settings for an altimeter/barometer
+    bool init();
+
     // Performs a full reading of all sensors in the BMP3XX. Assigns
     // the internal temperature, pressure and altitudeAmsl variables
     bool performReading();

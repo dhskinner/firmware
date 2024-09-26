@@ -22,6 +22,10 @@
 #include "error.h"
 #include "power.h"
 
+#ifdef  ROCKETFLIGHT_EDITION
+#include "RocketFlightDB.h"
+#endif
+
 #if !MESHTASTIC_EXCLUDE_I2C
 #include "detect/ScanI2CTwoWire.h"
 #include <Wire.h>
@@ -611,7 +615,11 @@ void setup()
 
     // We do this as early as possible because this loads preferences from flash
     // but we need to do this after main cpu init (esp32setup), because we need the random seed set
+#ifdef  ROCKETFLIGHT_EDITION
+    nodeDB = new RocketFlightDB;
+#else
     nodeDB = new NodeDB;
+#endif
 
     // If we're taking on the repeater role, use flood router and turn off 3V3_S rail because peripherals are not needed
     if (config.device.role == meshtastic_Config_DeviceConfig_Role_REPEATER) {

@@ -6,9 +6,10 @@
 /**
  * Position module for sending/receiving positions into the mesh
  */
-class PositionModule : public ProtobufModule<meshtastic_Position>, private concurrency::OSThread
+class PositionModule : public ProtobufModule<meshtastic_Position>, protected concurrency::OSThread
 {
-    CallbackObserver<PositionModule, const meshtastic::Status *> nodeStatusObserver =
+  protected:
+      CallbackObserver<PositionModule, const meshtastic::Status *> nodeStatusObserver =
         CallbackObserver<PositionModule, const meshtastic::Status *>(this, &PositionModule::handleStatusUpdate);
 
     /// The id of the last packet we sent, to allow us to cancel it if we make something fresher
@@ -24,6 +25,13 @@ class PositionModule : public ProtobufModule<meshtastic_Position>, private concu
     /// We force a rebroadcast if the radio settings change
     uint32_t currentGeneration = 0;
 
+    // Set the position precision - integer from 0 (no position) to 32 (maximum position accuracy)
+    uint32_t precision;
+
+    // Minimum milliseconds between successive position broadcasts
+    uint32_t minimumTimeThreshold =
+        Default::getConfiguredOrDefaultMs(config.position.broadcast_smart_minimum_interval_secs, 30);
+
   public:
     /** Constructor
      * name is for debugging output
@@ -33,10 +41,9 @@ class PositionModule : public ProtobufModule<meshtastic_Position>, private concu
     /**
      * Send our position into the mesh
      */
-    void sendOurPosition(NodeNum dest, bool wantReplies = false, uint8_t channel = 0);
-    void sendOurPosition();
-
-    void handleNewPosition();
+    virtual void sendOurPosition(NodeNum dest, bool wantReplies = false, uint8_t channel = 0);
+    virtual void sendOurPosition();
+    virtual void handleNewPosition();
 
   protected:
     /** Called to handle a particular incoming message
@@ -54,20 +61,15 @@ class PositionModule : public ProtobufModule<meshtastic_Position>, private concu
     /** Does our periodic broadcast */
     virtual int32_t runOnce() override;
 
-  private:
-    struct SmartPosition getDistanceTraveledSinceLastSend(meshtastic_PositionLite currentPosition);
-    meshtastic_MeshPacket *allocAtakPli();
-    void trySetRtc(meshtastic_Position p, bool isLocal, bool forceUpdate = false);
-    uint32_t precision;
-    void sendLostAndFoundText();
-    bool hasQualityTimesource();
-
-    const uint32_t minimumTimeThreshold =
-        Default::getConfiguredOrDefaultMs(config.position.broadcast_smart_minimum_interval_secs, 30);
+    virtual struct SmartPosition getDistanceTraveledSinceLastSend(meshtastic_PositionLite currentPosition);
+    virtual meshtastic_MeshPacket *allocAtakPli();
+    virtual void trySetRtc(meshtastic_Position p, bool isLocal, bool forceUpdate = false);
+    virtual void sendLostAndFoundText();
+    virtual bool hasQualityTimesource();
 };
 
 struct SmartPosition {
-    float distanceTraveled;
+    uint32_t distanceTraveled;
     uint32_t distanceThreshold;
     bool hasTraveledOverThreshold;
 };

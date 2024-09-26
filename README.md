@@ -1,18 +1,78 @@
-# Meshtastic Firmware
+# Meshtastic Rocketflight Edition
 
-![GitHub release downloads](https://img.shields.io/github/downloads/meshtastic/firmware/total)
-[![CI](https://img.shields.io/github/actions/workflow/status/meshtastic/firmware/main_matrix.yml?branch=master&label=actions&logo=github&color=yellow)](https://github.com/meshtastic/firmware/actions/workflows/ci.yml)
-[![CLA assistant](https://cla-assistant.io/readme/badge/meshtastic/firmware)](https://cla-assistant.io/meshtastic/firmware)
-[![Fiscal Contributors](https://opencollective.com/meshtastic/tiers/badge.svg?label=Fiscal%20Contributors&color=deeppink)](https://opencollective.com/meshtastic/)
-[![Vercel](https://img.shields.io/static/v1?label=Powered%20by&message=Vercel&style=flat&logo=vercel&color=000000)](https://vercel.com?utm_source=meshtastic&utm_campaign=oss)
+This is custom firmware load of Meshtastic designed for amateur and high power rocketry.
 
-## Overview
+## Design Aims
 
-This repository contains the device firmware for the Meshtastic project.
+Design aims are to provide:
 
-- **[Building Instructions](https://meshtastic.org/docs/development/firmware/build)**
-- **[Flashing Instructions](https://meshtastic.org/docs/getting-started/flashing-firmware/)**
+- a capable rocketry tracker that 'just works' out-of-the-box
+- all the goody-goodness from Meshtastic like their IoS/Android app
+- easy to add-on sensors altimeters, accelerometers, data logging etc
+- a pathway to upgrade to a full-feature dual deploy flight computer/datalogger
+- firmware that has long term support i.e. from more than just one person
+- cost effective at less than AUD$100 (about US$65) all up
 
-## Stats
+## Features
 
-![Alt](https://repobeats.axiom.co/api/embed/a92f097d9197ae853e780ec53d7d126e545629ab.svg "Repobeats analytics image")
+Tracker:
+
+- [x] Transmit position, distance, direction
+- [x] [IoS](https://apps.apple.com/us/app/meshtastic/id1586432531) and [Android](https://play.google.com/store/apps/details?id=com.geeksville.mesh) app from [Meshtastic](https://meshtastic.org/docs/software/)
+- [x] Onboard status display screen
+- [x] Set initial launch position and ground altitude
+- [ ] Low rate data logging
+- [ ] Battery status (% charge etc)
+- [ ] Beep codes
+
+Altimeter:
+
+- [ ] Transmit altitude from any barometer supported by Meshtastic
+- [ ] Transmit motion from any sensor supported by Meshtastic
+- [ ] Transmit state of flight (boost, coast, apogee etc)
+- [ ] High rate data logging
+- [ ] Lost and found mode
+
+Flight Computer:
+
+- [ ] Dual deploy pyro channels
+
+## Getting Started
+
+### Compatible Hardware
+
+In theory any combination of board and I2C sensors supported by Meshtastic should be supportable.
+
+The firmware is currently optimised for:
+
+- [Heltec Wireless Tracker](https://heltec.org/project/wireless-tracker/)
+- BMP388 barometer/altimeter
+- ICM-20948 motion processor
+- MAX-17048 Lipo Fuel Gauge
+
+More board and sensor options will be tested over time.
+
+### Flashing the Firmware
+
+[placeholder for more info]
+
+## Development
+
+### Building from Source
+
+The code is based on a forked copy of the Meshtastic development repository at [https://github.com/rocketflight/meshtastic_firmware](https://github.com/rocketflight/meshtastic_firmware)
+
+This repository contains the device firmware - follow the same instructions to build from Meshtastic:
+
+**[Building Instructions](https://meshtastic.org/docs/development/firmware/build)**
+
+### Source Code
+
+The [RocketFlight](https://github.com/rocketflight/meshtastic_firmware) repo is synced regularly with the current main branch of Meshtastic i.e. this codebase is moving quickly and our aim is to keep up with the latest enhancements available.
+
+Rocketflight also aims to be as compatible as possible and tries to avoid instrusive changes which would 'break' over time - this means:
+
+- we use inbuilt compiler flags in Meshtastic to turn off unecessary modules and features
+- the Rocketflight code is fairly self-contained in just a couple of places to hopefully avoid merge issues
+
+[placeholder for more info]

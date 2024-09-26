@@ -29,7 +29,11 @@
 #include "modules/NodeInfoModule.h"
 #endif
 #if !MESHTASTIC_EXCLUDE_GPS
+#ifdef ROCKETFLIGHT_EDITION
+#include "modules/RocketflightModule.h"
+#else
 #include "modules/PositionModule.h"
+#endif
 #endif
 #if !MESHTASTIC_EXCLUDE_REMOTEHARDWARE
 #include "modules/RemoteHardwareModule.h"
@@ -102,7 +106,11 @@ void setupModules()
         nodeInfoModule = new NodeInfoModule();
 #endif
 #if !MESHTASTIC_EXCLUDE_GPS
+#ifdef ROCKETFLIGHT_EDITION
+        positionModule = new RocketFlightModule();
+#else
         positionModule = new PositionModule();
+#endif
 #endif
 #if !MESHTASTIC_EXCLUDE_WAYPOINT
         waypointModule = new WaypointModule();

@@ -16,6 +16,7 @@
 #include "meshtastic/atak.pb.h"
 #include "sleep.h"
 #include "target_specific.h"
+#include <cmath>
 
 extern "C" {
 #include <Throttle.h>
@@ -446,8 +447,8 @@ struct SmartPosition PositionModule::getDistanceTraveledSinceLastSend(meshtastic
         Default::getConfiguredOrDefault(config.position.broadcast_smart_minimum_distance, 100);
 
     // Determine the distance in meters between two points on the globe
-    float distanceTraveledSinceLastSend = GeoCoord::latLongToMeter(
-        lastGpsLatitude * 1e-7, lastGpsLongitude * 1e-7, currentPosition.latitude_i * 1e-7, currentPosition.longitude_i * 1e-7);
+    uint32_t distanceTraveledSinceLastSend = abs(std::round(GeoCoord::latLongToMeter(
+        lastGpsLatitude * 1e-7, lastGpsLongitude * 1e-7, currentPosition.latitude_i * 1e-7, currentPosition.longitude_i * 1e-7)));
 
 #ifdef GPS_EXTRAVERBOSE
     LOG_DEBUG("--------LAST POSITION------------------------------------\n");
@@ -466,9 +467,9 @@ struct SmartPosition PositionModule::getDistanceTraveledSinceLastSend(meshtastic
     }
 #endif
 
-    return SmartPosition{.distanceTraveled = abs(distanceTraveledSinceLastSend),
+    return SmartPosition{.distanceTraveled = distanceTraveledSinceLastSend,
                          .distanceThreshold = distanceTravelThreshold,
-                         .hasTraveledOverThreshold = abs(distanceTraveledSinceLastSend) >= distanceTravelThreshold};
+                         .hasTraveledOverThreshold = distanceTraveledSinceLastSend >= distanceTravelThreshold};
 }
 
 void PositionModule::handleNewPosition()

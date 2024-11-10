@@ -19,7 +19,7 @@ PacketHistory::PacketHistory()
 bool PacketHistory::wasSeenRecently(const meshtastic_MeshPacket *p, bool withUpdate)
 {
     if (p->id == 0) {
-        LOG_DEBUG("Ignoring message with zero id\n");
+        LOG_DEBUG("Ignore message with zero id");
         return false; // Not a floodable message ID, so we don't care
     }
 
@@ -38,8 +38,15 @@ bool PacketHistory::wasSeenRecently(const meshtastic_MeshPacket *p, bool withUpd
         seenRecently = false;
     }
 
+    /* If the original transmitter is doing retransmissions (hopStart equals hopLimit) for a reliable transmission, e.g., when the
+       ACK got lost, we will handle the packet again to make sure it gets an ACK/response to its packet. */
+    if (seenRecently && p->hop_start > 0 && p->hop_start == p->hop_limit) {
+        LOG_DEBUG("Repeated reliable tx");
+        seenRecently = false;
+    }
+
     if (seenRecently) {
-        LOG_DEBUG("Found existing packet record for fr=0x%x,to=0x%x,id=0x%x\n", p->from, p->to, p->id);
+        LOG_DEBUG("Found existing packet record for fr=0x%x,to=0x%x,id=0x%x", p->from, p->to, p->id);
     }
 
     if (withUpdate) {
@@ -64,7 +71,7 @@ bool PacketHistory::wasSeenRecently(const meshtastic_MeshPacket *p, bool withUpd
  */
 void PacketHistory::clearExpiredRecentPackets()
 {
-    LOG_DEBUG("recentPackets size=%ld\n", recentPackets.size());
+    LOG_DEBUG("recentPackets size=%ld", recentPackets.size());
 
     for (auto it = recentPackets.begin(); it != recentPackets.end();) {
         if (!Throttle::isWithinTimespanMs(it->rxTimeMsec, FLOOD_EXPIRE_TIME)) {
@@ -74,5 +81,5 @@ void PacketHistory::clearExpiredRecentPackets()
         }
     }
 
-    LOG_DEBUG("recentPackets size=%ld (after clearing expired packets)\n", recentPackets.size());
+    LOG_DEBUG("recentPackets size=%ld (after clearing expired packets)", recentPackets.size());
 }

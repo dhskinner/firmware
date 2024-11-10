@@ -1,3 +1,5 @@
+#include <sys/types.h>
+
 #pragma once
 #include "ProtobufModule.h"
 #if HAS_WIFI
@@ -57,6 +59,7 @@ class AdminModule : public ProtobufModule<meshtastic_AdminMessage>, public Obser
 
     bool messageIsResponse(const meshtastic_AdminMessage *r);
     bool messageIsRequest(const meshtastic_AdminMessage *r);
+    void sendWarning(const char *message);
 };
 
 extern AdminModule *adminModule;

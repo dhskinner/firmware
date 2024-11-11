@@ -98,19 +98,6 @@ bool RocketFlightModule::init()
     }
     LOG_INFO("Altimeter type: %s status: %s", altimeter->name(), altimeter->isValid() ? "ok" : "failed");
 
-    // // get the motion processor if one is available
-    // switch (accelerometer_found.type)
-    // {
-    //     case ScanI2C::DeviceType::ICM20948:
-    //         mpu = ICM20948Singleton::GetInstance();
-    //         bool result = mpu->init();
-    //         LOG_DEBUG("RocketFlightModule::init: motion processor %s", result ? "ok" : "fail");
-    //         result = mpu->setWakeOnMotion();
-    //         LOG_DEBUG("RocketFlightModule::init: wake on motion %s", result ? "ok" : "fail");
-    //     default:
-
-    // }
-
     // start sending positions immediately
     setIntervalFromNow(ROCKETFLIGHT_MODULE_INTERVAL);
 
@@ -131,7 +118,7 @@ int32_t RocketFlightModule::runOnce()
         return ROCKETFLIGHT_MODULE_INTERVAL;
     }
 
-    // Only send packets if the channel util. is less than 25% utilized or we're a tracker with less than 40% utilized.
+    // Only send packets if the channel util. is less than a given threshold
     if (!airTime->isTxAllowedChannelUtil(config.device.role != meshtastic_Config_DeviceConfig_Role_TRACKER &&
                                          config.device.role != meshtastic_Config_DeviceConfig_Role_TAK_TRACKER))
     {
@@ -139,33 +126,7 @@ int32_t RocketFlightModule::runOnce()
         return ROCKETFLIGHT_MODULE_INTERVAL;
     }
 
-    // currentAltitude = altimeter->getAltitude();
-    // currentAltitudeSource = altimeter->g;
-    // if (altimeter != nullptr)
-    // {
-    //     currentAltitude = static_cast<double>(localPosition.altitude);
-    //     currentAltitudeSource = meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_MANUAL;
-    // }
-    // else if (altimeter != nullptr)
-    // {
-    //     currentAltitude = altimeter->getAltitude();
-    //     currentAltitudeSource = altimeter->getAltitudeSource();
-    // }
-    // else if (gpsStatus->getHasLock())
-    // {
-    //     currentAltitude = static_cast<double>(localPosition.altitude);
-    //     currentAltitudeSource = meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_INTERNAL;
-    // }
-    // else
-    // {
-    //     currentAltitude = INVALID_ALTITUDE;
-    //     currentAltitudeSource = meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_UNSET;
-    // }
-    // // Apply an offset from reference altitude
-    // if (currentAltitude != INVALID_ALTITUDE)
-    //     currentAltitude -= referenceAltitude;
-
-    // If not in smart position mode, only send every n milliseconds
+    // Only send every n milliseconds
     uint32_t now = millis();
     if ((now - lastGpsSend) < minimumTimeThreshold)
     {

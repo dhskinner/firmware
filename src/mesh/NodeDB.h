@@ -125,16 +125,26 @@ class NodeDB
      */
     size_t getNumOnlineMeshNodes(bool localOnly = false);
 
+#ifdef ROCKETFLIGHT_CONFIG
+    virtual void initConfigIntervals(), initModuleConfigIntervals(), resetNodes(), removeNodeByNum(NodeNum nodeNum);
+
+    virtual bool factoryReset(bool eraseBleBonds = false);
+#else 
     void initConfigIntervals(), initModuleConfigIntervals(), resetNodes(), removeNodeByNum(NodeNum nodeNum);
 
     bool factoryReset(bool eraseBleBonds = false);
+#endif
 
     LoadFileResult loadProto(const char *filename, size_t protoSize, size_t objSize, const pb_msgdesc_t *fields,
                              void *dest_struct);
     bool saveProto(const char *filename, size_t protoSize, const pb_msgdesc_t *fields, const void *dest_struct,
                    bool fullAtomic = true);
 
+#ifdef ROCKETFLIGHT_CONFIG
+    virtual void installRoleDefaults(meshtastic_Config_DeviceConfig_Role role);
+#else 
     void installRoleDefaults(meshtastic_Config_DeviceConfig_Role role);
+#endif
 
     const meshtastic_NodeInfoLite *readNextMeshNode(uint32_t &readIndex);
 
@@ -165,7 +175,12 @@ class NodeDB
         localPosition = position;
     }
 
+#ifdef ROCKETFLIGHT_CONFIG
+  protected:
+#else
   private:
+#endif
+
     uint32_t lastNodeDbSave = 0; // when we last saved our db to flash
     /// Find a node in our DB, create an empty NodeInfoLite if missing
     meshtastic_NodeInfoLite *getOrCreateMeshNode(NodeNum n);
@@ -179,14 +194,26 @@ class NodeDB
     }
 
     /// read our db from flash
+#ifdef ROCKETFLIGHT_CONFIG
+    virtual void loadFromDisk();
+    virtual void loadFromJson();
+#else
     void loadFromDisk();
+#endif
 
     /// purge db entries without user info
     void cleanupMeshDB();
 
     /// Reinit device state from scratch (not loading from disk)
+#ifdef ROCKETFLIGHT_CONFIG
+    virtual void installDefaultDeviceState();
+    virtual void installDefaultChannels();
+    virtual void installDefaultConfig(bool preserveKey);
+    virtual void installDefaultModuleConfig();
+#else
     void installDefaultDeviceState(), installDefaultChannels(), installDefaultConfig(bool preserveKey),
         installDefaultModuleConfig();
+#endif
 
     /// write to flash
     /// @return true if the save was successful

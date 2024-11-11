@@ -11,6 +11,10 @@
 #include "input/UpDownInterruptImpl1.h"
 #include "modules/PositionModule.h"
 
+#ifdef ROCKETFLIGHT_GPS
+#include "modules/Telemetry/Sensor/Altimeter.h"
+#endif
+
 // Allow defining the polarity of the ENABLE output.  default is active high
 #ifndef GPS_EN_ACTIVE
 #define GPS_EN_ACTIVE 1
@@ -76,6 +80,10 @@ class GPS : private concurrency::OSThread
     uint8_t fixType = 0;      // fix type from GPGSA
 #endif
   private:
+#ifdef ROCKETFLIGHT_GPS
+  protected:
+#endif
+
 #if GPS_BAUDRATE_FIXED
     // if GPS_BAUDRATE is specified in variant, only try that.
     const int serialSpeeds[1] = {GPS_BAUDRATE};
@@ -306,6 +314,10 @@ class GPS : private concurrency::OSThread
      */
     void setPowerUBLOX(bool on, uint32_t sleepMs = 0);
 
+#ifdef ROCKETFLIGHT_GPS
+  protected:
+#endif
+
     /**
      * Tell users we have new GPS readings
      */
@@ -323,6 +335,11 @@ class GPS : private concurrency::OSThread
 
   protected:
     GnssModel_t gnssModel = GNSS_MODEL_UNKNOWN;
+
+#ifdef ROCKETFLIGHT_GPS
+    public:
+      inline virtual Altimeter* asAltimeter() {return nullptr;}
+#endif
 };
 
 extern GPS *gps;

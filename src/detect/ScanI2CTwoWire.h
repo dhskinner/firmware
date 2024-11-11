@@ -12,7 +12,9 @@
 
 #include "ScanI2C.h"
 
+#ifndef ROCKETFLIGHT_MODULE
 #include "../concurrency/Lock.h"
+#endif
 
 class ScanI2CTwoWire : public ScanI2C
 {
@@ -46,12 +48,17 @@ class ScanI2CTwoWire : public ScanI2C
 
     typedef uint8_t ResponseWidth;
 
+#ifdef ROCKETFLIGHT_MODULE
+    std::map<ScanI2C::DeviceAddress, ScanI2C::DeviceType> foundDevices = {{ ScanI2C::ADDRESS_NONE, ScanI2C::DeviceType::NONE}};
+    std::map<ScanI2C::DeviceType, ScanI2C::DeviceAddress> deviceAddresses = {{ScanI2C::DeviceType::NONE, ScanI2C::ADDRESS_NONE}};
+#else
     std::map<ScanI2C::DeviceAddress, ScanI2C::DeviceType> foundDevices;
 
     // note: prone to overwriting if multiple devices of a type are added at different addresses (rare?)
     std::map<ScanI2C::DeviceType, ScanI2C::DeviceAddress> deviceAddresses;
 
     concurrency::Lock lock;
+#endif
 
     void printATECCInfo() const;
 

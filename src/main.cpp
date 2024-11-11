@@ -1,7 +1,11 @@
 #include "../userPrefs.h"
 #include "configuration.h"
 #if !MESHTASTIC_EXCLUDE_GPS
+#ifdef ROCKETFLIGHT_GPS
+#include "rocketflight/gps/RocketFlightGPS.h"
+#else
 #include "GPS.h"
+#endif
 #endif
 #include "MeshRadio.h"
 #include "MeshService.h"
@@ -145,8 +149,15 @@ uint8_t kb_model;
 
 // The I2C address of the RTC Module (if found)
 ScanI2C::DeviceAddress rtc_found = ScanI2C::ADDRESS_NONE;
+#ifdef ROCKETFLIGHT_MODULE
+// The I2C address of the Accelerometer (if found)
+ScanI2C::FoundDevice accelerometer_found = ScanI2C::DEVICE_NONE;
+// The I2C address of the Altimeter (if found)
+ScanI2C::FoundDevice altimeter_found = ScanI2C::DEVICE_NONE;
+#else
 // The I2C address of the Accelerometer (if found)
 ScanI2C::DeviceAddress accelerometer_found = ScanI2C::ADDRESS_NONE;
+#endif
 // The I2C address of the RGB LED (if found)
 ScanI2C::FoundDevice rgb_found = ScanI2C::FoundDevice(ScanI2C::DeviceType::NONE, ScanI2C::ADDRESS_NONE);
 
@@ -567,9 +578,16 @@ void setup()
 #endif
 
 #if !defined(ARCH_PORTDUINO) && !defined(ARCH_STM32WL)
+#ifdef ROCKETFLIGHT_MODULE
+    altimeter_found = i2cScanner->firstAltimeter();
+    LOG_DEBUG("alt_info = %i\n", altimeter_found.type);
+    accelerometer_found = i2cScanner->firstAccelerometer();
+    LOG_DEBUG("acc_info = %i\n", accelerometer_found.type);
+#else
     auto acc_info = i2cScanner->firstAccelerometer();
     accelerometer_found = acc_info.type != ScanI2C::DeviceType::NONE ? acc_info.address : accelerometer_found;
     LOG_DEBUG("acc_info = %i", acc_info.type);
+#endif
 #endif
 
 #define STRING(S) #S
@@ -690,9 +708,15 @@ void setup()
 
 #if !MESHTASTIC_EXCLUDE_I2C
 #if !defined(ARCH_PORTDUINO) && !defined(ARCH_STM32WL)
+#ifdef ROCKETFLIGHT_MODULE
+    if (accelerometer_found.type != ScanI2C::DeviceType::NONE) {
+        accelerometerThread = new AccelerometerThread(accelerometer_found.type);
+    }
+#else
     if (acc_info.type != ScanI2C::DeviceType::NONE) {
         accelerometerThread = new AccelerometerThread(acc_info.type);
     }
+#endif
 #endif
 
 #if defined(HAS_NEOPIXEL) || defined(UNPHONE) || defined(RGBLED_RED)
@@ -766,7 +790,11 @@ void setup()
         if (HAS_GPS) {
             if (config.device.role != meshtastic_Config_DeviceConfig_Role_REPEATER &&
                 config.position.gps_mode != meshtastic_Config_PositionConfig_GpsMode_NOT_PRESENT) {
+#ifdef ROCKETFLIGHT_GPS
+                gps = RocketFlightGPS::createGps();
+#else
                 gps = GPS::createGps();
+#endif
                 if (gps) {
                     gpsStatus->observe(&gps->newStatus);
                 } else {

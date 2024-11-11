@@ -31,7 +31,11 @@ extern ScanI2C::DeviceAddress screen_found;
 extern ScanI2C::DeviceAddress cardkb_found;
 extern uint8_t kb_model;
 extern ScanI2C::DeviceAddress rtc_found;
+#ifdef ROCKETFLIGHT_MODULE
+extern ScanI2C::FoundDevice accelerometer_found;
+#else
 extern ScanI2C::DeviceAddress accelerometer_found;
+#endif
 extern ScanI2C::FoundDevice rgb_found;
 
 extern bool eink_found;

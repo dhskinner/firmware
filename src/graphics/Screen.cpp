@@ -71,6 +71,12 @@ using namespace meshtastic; /** @todo remove */
 namespace graphics
 {
 
+#ifdef ROCKETFLIGHT_SCREEN
+    extern size_t getRocketFlightNodeCount();
+    extern void drawRocketFlightIconScreen(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
+    extern void drawRocketFlightNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
+#endif
+
 // This means the *visible* area (sh1106 can address 132, but shows 128 for example)
 #define IDLE_FRAMERATE 1 // in fps
 
@@ -124,6 +130,7 @@ static bool heartbeat = false;
 
 #define getStringCenteredX(s) ((SCREEN_WIDTH - display->getStringWidth(s)) / 2)
 
+#ifndef ROCKETFLIGHT_SCREEN
 /// Check if the display can render a string (detect special chars; emoji)
 static bool haveGlyphs(const char *str)
 {
@@ -185,6 +192,7 @@ static void drawIconScreen(const char *upperMsg, OLEDDisplay *display, OLEDDispl
 
     display->setTextAlignment(TEXT_ALIGN_LEFT); // Restore left align, just to be kind to any other unsuspecting code
 }
+#endif
 
 void Screen::drawFrameText(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y, const char *message)
 {
@@ -1231,10 +1239,15 @@ float Screen::estimatedHeading(double lat, double lon)
     return b;
 }
 
+#ifdef ROCKETFLIGHT_SCREEN
+size_t nodeIndex;
+int8_t prevFrame = -1;
+#else
 /// We will skip one node - the one for us, so we just blindly loop over all
 /// nodes
 static size_t nodeIndex;
 static int8_t prevFrame = -1;
+#endif
 
 // Draw the arrow pointing to a node's location
 void Screen::drawNodeHeading(OLEDDisplay *display, int16_t compassX, int16_t compassY, uint16_t compassDiam, float headingRadian)
@@ -1348,6 +1361,7 @@ uint16_t Screen::getCompassDiam(uint32_t displayWidth, uint32_t displayHeight)
     return diam - 20;
 };
 
+#ifndef ROCKETFLIGHT_SCREEN
 static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
 {
     // We only advance our nodeIndex if the frame # has changed - because
@@ -1462,6 +1476,7 @@ static void drawNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_
     // Must be after distStr is populated
     screen->drawColumns(display, x, y, fields);
 }
+#endif
 
 #if defined(ESP_PLATFORM) && defined(USE_ST7789)
 SPIClass SPI1(HSPI);
@@ -1658,9 +1673,13 @@ void Screen::setup()
         } else
 #endif
         {
+#ifdef ROCKETFLIGHT_SCREEN
+            drawRocketFlightIconScreen(display, state, x, y);
+#else
             // Draw region in upper left
             const char *region = myRegion ? myRegion->name : NULL;
             drawIconScreen(region, display, state, x, y);
+#endif
         }
     };
     ui->setFrames(alertFrames, 1);
@@ -2018,10 +2037,15 @@ void Screen::setFrames(FrameFocus focus)
     LOG_DEBUG("Total frame count: %d", totalFrameCount);
 #endif
 
+#ifdef ROCKETFLIGHT_SCREEN
+    // Get tracker nodes only, minus our own node
+    size_t numMeshNodes = getRocketFlightNodeCount();
+#else
     // We don't show the node info of our node (if we have it yet - we should)
     size_t numMeshNodes = nodeDB->getNumMeshNodes();
     if (numMeshNodes > 0)
         numMeshNodes--;
+#endif
 
     size_t numframes = 0;
 
@@ -2072,6 +2096,9 @@ void Screen::setFrames(FrameFocus focus)
     // We only show a few nodes in our scrolling list - because meshes with many nodes would have too many screens
     size_t numToShow = min(numMeshNodes, 4U);
     for (size_t i = 0; i < numToShow; i++)
+#ifdef ROCKETFLIGHT_SCREEN
+        normalFrames[numframes++] = drawRocketFlightNodeInfo;
+#else
         normalFrames[numframes++] = drawNodeInfo;
 
     // then the debug info
@@ -2091,6 +2118,8 @@ void Screen::setFrames(FrameFocus focus)
         // call a method on debugInfoScreen object (for more details)
         normalFrames[numframes++] = &Screen::drawDebugInfoWiFiTrampoline;
     }
+#endif
+
 #endif
 
     fsi.frameCount = numframes; // Total framecount is used to apply FOCUS_PRESERVE

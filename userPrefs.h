@@ -1,9 +1,107 @@
+#pragma once
 #ifndef _USERPREFS_
 #define _USERPREFS_
 
+// --------------------------------------------------------------------------------
+// Configuration flags - almost everything can be adjusted - refer to
+// the original protobuf definition files for the meaning of each field
+#define ROCKETFLIGHT_CONFIG 1
+
+// Display a custom screens for RocketFlight
+#define ROCKETFLIGHT_SCREEN
+
+// Enable the RocketFlight always-on GPS
+#define ROCKETFLIGHT_GPS 1
+
+// Enable the main RocketFlight module
+#define ROCKETFLIGHT_MODULE 1
+
+// --------------------------------------------------------------------------------
+// Rocketflight settings
+
+#ifdef ROCKETFLIGHT_CONFIG
+#define ROCKETFLIGHT_CONFIG_FORCE_DEFAULT_SETTINGS 1
+#define USERPREFS_TZ_STRING "AEST-10"
+#define METERS_TO_FEET 3.28084
+#include <string>
+#include <Arduino.h>
+#endif
+
+// ----------------------------------------
+#ifdef ROCKETFLIGHT_GPS
+#ifdef GPS_THREAD_INTERVAL
+#undef GPS_THREAD_INTERVAL
+#endif
+#define GPS_THREAD_INTERVAL 100
+#define GPS_LOST_LOCK_MILLIS 5000
+#endif
+
+// ----------------------------------------
+#ifdef ROCKETFLIGHT_SCREEN
+#define USERPREFS_HAS_SPLASH 1
+#endif
+
+// ----------------------------------------
+#ifdef ROCKETFLIGHT_MODULE
+#define METERS_TO_FEET 3.28084
+#define ROCKETFLIGHT_MODULE_INTERVAL 1000
+#define ROCKETFLIGHT_MODULE_POSITION_PRECISION 31
+#define ROCKETFLIGHT_MAX_CHANNEL_UTIL_PERCENT 60
+#define ROCKETFLIGHT_REFERENCE_ALTITUDE_SAMPLE_SIZE 10
+#define ROCKETFLIGHT_REFERENCE_ALTITUDE_SAMPLE_MILLIS 500
+#define ICM_20948_MPU_GYRO_SCALE dps1000    // dps250, dps500, dps1000, dps2000
+#define ICM_20948_MPU_ACCEL_SCALE gpm16     // gpm2, gpm4, gpm8, gpm16
+#define ICM_20948_INT_PIN 5                 // interrupt pin
+#define ICM_20948_WOM_THRESHOLD 16U         // threshold for Wake on Motion Sensing (0mg to 1020mg)
+// #define ICM_20948_DEBUG 1                // uncomment to enable debug on Serial
+// #define ICM_20948_DMP_IS_ENABLED 1       // uncomment to enable the digital motion processor
+#endif
+
+// ----------------------------------------
+// Exclude modules that are not relevant to rocketry
+#if defined(ROCKETFLIGHT_CONFIG) || defined(ROCKETFLIGHT_MODULE)
+#define MESHTASTIC_EXCLUDE_WIFI 1
+#define MESHTASTIC_EXCLUDE_MQTT 1
+#define MESHTASTIC_EXCLUDE_AUDIO 1
+#define MESHTASTIC_EXCLUDE_DETECTIONSENSOR 1
+#define MESHTASTIC_EXCLUDE_EXTERNALNOTIFICATION 1
+#define MESHTASTIC_EXCLUDE_PAXCOUNTER 1
+#define MESHTASTIC_EXCLUDE_REMOTEHARDWARE 1
+#define MESHTASTIC_EXCLUDE_STOREFORWARD 1
+#define MESHTASTIC_EXCLUDE_TEXTMESSAGE 1
+#define MESHTASTIC_EXCLUDE_ATAK 1
+#define MESHTASTIC_EXCLUDE_CANNEDMESSAGES 1
+#define MESHTASTIC_EXCLUDE_NEIGHBORINFO 1
+#define MESHTASTIC_EXCLUDE_TRACEROUTE 1
+#define MESHTASTIC_EXCLUDE_INPUTBROKER 1
+#define MESHTASTIC_EXCLUDE_SERIAL 1
+#define MESHTASTIC_EXCLUDE_POWERSTRESS 1
+#define MESHTASTIC_EXCLUDE_POWERMON 1
+#define MESHTASTIC_EXCLUDE_WAYPOINT 1
+#define MESHTASTIC_EXCLUDE_AMBIENT_LIGHTING 1
+#define MESHTASTIC_EXCLUDE_VEXT_ON_OFF 1
+//#define EVENT_MODE 1
+#define EXCLUDE_EMOJI 1
+#define SHOW_REDRAWS 1
+// #define MESHTASTIC_EXCLUDE_ADMIN 1
+// #define MESHTASTIC_EXCLUDE_BLUETOOTH 1
+// #define MESHTASTIC_EXCLUDE_GPS 1
+// #define MESHTASTIC_EXCLUDE_SCREEN 1
+// #define MESHTASTIC_EXCLUDE_I2C 1
+// #define MESHTASTIC_EXCLUDE_PKI 1
+// #define MESHTASTIC_EXCLUDE_POWER_FSM 1
+// #define MESHTASTIC_EXCLUDE_TZ 1
+// #define MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR 1
+// #define MESHTASTIC_EXCLUDE_POWER_TELEMETRY 1
+// #define MESHTASTIC_EXCLUDE_RANGETEST 1
+#endif
+
+// ----------------------------------------------------------------------------------------------------
+// Original Userprefs from Meshtastic
+
 // Slipstream values:
 
-#define USERPREFS_TZ_STRING "tzplaceholder                                         "
+// #define USERPREFS_TZ_STRING "tzplaceholder                                         "
 
 // Uncomment and modify to set device defaults
 

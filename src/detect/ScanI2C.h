@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "configuration.h"
 
 class ScanI2C
 {
@@ -115,6 +116,10 @@ class ScanI2C
     FoundDevice firstKeyboard() const;
 
     FoundDevice firstAccelerometer() const;
+
+#ifdef ROCKETFLIGHT_MODULE
+    FoundDevice firstAltimeter() const;
+#endif
 
     virtual FoundDevice find(DeviceType) const;
 

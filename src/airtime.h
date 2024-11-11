@@ -67,7 +67,11 @@ class AirTime : private concurrency::OSThread
     uint8_t lastUtilPeriod = 0;
     uint8_t lastUtilPeriodTX = 0;
     uint32_t secSinceBoot = 0;
+#ifdef ROCKETFLIGHT_MODULE
+    uint8_t max_channel_util_percent = ROCKETFLIGHT_MAX_CHANNEL_UTIL_PERCENT;
+#else
     uint8_t max_channel_util_percent = 40;
+#endif
     uint8_t polite_channel_util_percent = 25;
     uint8_t polite_duty_cycle_percent = 50; // half of Duty Cycle allowance is ok for metadata
 

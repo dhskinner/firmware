@@ -107,6 +107,9 @@ NodeDB::NodeDB()
 {
     LOG_INFO("Init NodeDB");
     loadFromDisk();
+#ifdef ROCKETFLIGHT_CONFIG
+    loadFromJson();
+#endif
     cleanupMeshDB();
 
     uint32_t devicestateCRC = crc32Buffer(&devicestate, sizeof(devicestate));

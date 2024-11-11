@@ -2,7 +2,9 @@
 
 #if !MESHTASTIC_EXCLUDE_I2C
 
+#ifndef ROCKETFLIGHT_MODULE
 #include "concurrency/LockGuard.h"
+#endif
 #if defined(ARCH_PORTDUINO)
 #include "linux/LinuxHardwareI2C.h"
 #endif
@@ -27,7 +29,9 @@ bool in_array(uint8_t *array, int size, uint8_t lookfor)
 
 ScanI2C::FoundDevice ScanI2CTwoWire::find(ScanI2C::DeviceType type) const
 {
+#ifndef ROCKETFLIGHT_MODULE
     concurrency::LockGuard guard((concurrency::Lock *)&lock);
+#endif
 
     return exists(type) ? ScanI2C::FoundDevice(type, deviceAddresses.at(type)) : DEVICE_NONE;
 }
@@ -39,7 +43,9 @@ bool ScanI2CTwoWire::exists(ScanI2C::DeviceType type) const
 
 ScanI2C::FoundDevice ScanI2CTwoWire::firstOfOrNONE(size_t count, DeviceType types[]) const
 {
+#ifndef ROCKETFLIGHT_MODULE
     concurrency::LockGuard guard((concurrency::Lock *)&lock);
+#endif
 
     for (size_t k = 0; k < count; k++) {
         ScanI2C::DeviceType current = types[k];
@@ -148,7 +154,9 @@ uint16_t ScanI2CTwoWire::getRegisterValue(const ScanI2CTwoWire::RegisterLocation
 
 void ScanI2CTwoWire::scanPort(I2CPort port, uint8_t *address, uint8_t asize)
 {
+#ifndef ROCKETFLIGHT_MODULE
     concurrency::LockGuard guard((concurrency::Lock *)&lock);
+#endif
 
     LOG_DEBUG("Scan for I2C devices on port %d", port);
 

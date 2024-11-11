@@ -19,7 +19,11 @@
 #endif
 #include "STK8XXXSensor.h"
 
+#ifdef ROCKETFLIGHT_MODULE
+extern ScanI2C::FoundDevice accelerometer_found;
+#else
 extern ScanI2C::DeviceAddress accelerometer_found;
+#endif
 
 class AccelerometerThread : public concurrency::OSThread
 {
@@ -34,7 +38,11 @@ class AccelerometerThread : public concurrency::OSThread
         init();
     }
 
+#ifdef ROCKETFLIGHT_MODULE
+    explicit AccelerometerThread(ScanI2C::DeviceType type) : AccelerometerThread(accelerometer_found)
+#else
     explicit AccelerometerThread(ScanI2C::DeviceType type) : AccelerometerThread(ScanI2C::FoundDevice{type, accelerometer_found})
+#endif
     {
     }
 

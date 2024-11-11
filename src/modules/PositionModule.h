@@ -6,8 +6,14 @@
 /**
  * Position module for sending/receiving positions into the mesh
  */
+#ifdef ROCKETFLIGHT_MODULE
+class PositionModule : public ProtobufModule<meshtastic_Position>, protected concurrency::OSThread
+{
+  protected:
+#else
 class PositionModule : public ProtobufModule<meshtastic_Position>, private concurrency::OSThread
 {
+#endif
     CallbackObserver<PositionModule, const meshtastic::Status *> nodeStatusObserver =
         CallbackObserver<PositionModule, const meshtastic::Status *>(this, &PositionModule::handleStatusUpdate);
 
@@ -33,10 +39,16 @@ class PositionModule : public ProtobufModule<meshtastic_Position>, private concu
     /**
      * Send our position into the mesh
      */
+#ifdef ROCKETFLIGHT_MODULE
+    virtual void sendOurPosition(NodeNum dest, bool wantReplies = false, uint8_t channel = 0);
+    virtual void sendOurPosition();
+    virtual void handleNewPosition();
+#else
     void sendOurPosition(NodeNum dest, bool wantReplies = false, uint8_t channel = 0);
     void sendOurPosition();
 
     void handleNewPosition();
+#endif
 
   protected:
     /** Called to handle a particular incoming message
@@ -54,6 +66,22 @@ class PositionModule : public ProtobufModule<meshtastic_Position>, private concu
     /** Does our periodic broadcast */
     virtual int32_t runOnce() override;
 
+#ifdef ROCKETFLIGHT_MODULE
+  protected:
+    virtual struct SmartPosition getDistanceTraveledSinceLastSend(meshtastic_PositionLite currentPosition);
+    virtual meshtastic_MeshPacket *allocAtakPli();
+    virtual void trySetRtc(meshtastic_Position p, bool isLocal, bool forceUpdate = false);
+    virtual void sendLostAndFoundText();
+    virtual bool hasQualityTimesource();
+
+    // Set the position precision - integer from 0 (no position) to 32 (maximum position accuracy)
+    uint32_t precision;
+
+    // Minimum milliseconds between successive position broadcasts
+    uint32_t minimumTimeThreshold =
+      Default::getConfiguredOrDefaultMs(config.position.broadcast_smart_minimum_interval_secs, 30);
+
+#else
   private:
     struct SmartPosition getDistanceTraveledSinceLastSend(meshtastic_PositionLite currentPosition);
     meshtastic_MeshPacket *allocAtakPli();
@@ -64,6 +92,7 @@ class PositionModule : public ProtobufModule<meshtastic_Position>, private concu
 
     const uint32_t minimumTimeThreshold =
         Default::getConfiguredOrDefaultMs(config.position.broadcast_smart_minimum_interval_secs, 30);
+#endif
 };
 
 struct SmartPosition {

@@ -42,7 +42,11 @@
 #endif
 
 // The I2C address of the Accelerometer (if found) from main.cpp
+#ifdef ROCKETFLIGHT_MODULE
+extern ScanI2C::FoundDevice accelerometer_found;
+#else
 extern ScanI2C::DeviceAddress accelerometer_found;
+#endif
 
 // Singleton wrapper for the Sparkfun ICM_20948_I2C class
 class ICM20948Singleton : public ICM_20948_I2C

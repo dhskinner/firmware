@@ -10,11 +10,11 @@
 // Display a custom screens for RocketFlight
 #define ROCKETFLIGHT_SCREEN
 
-// Enable the RocketFlight always-on GPS
-#define ROCKETFLIGHT_GPS 1
+// Enable the RocketFlight position module and 'always-on' GPS
+#define ROCKETFLIGHT_POSITION 1
 
-// Enable the main RocketFlight module
-#define ROCKETFLIGHT_MODULE 1
+// Enable the RocketFlight high rate data logger module
+#define ROCKETFLIGHT_FLIGHT 1
 
 // --------------------------------------------------------------------------------
 // Rocketflight settings
@@ -28,27 +28,28 @@
 #endif
 
 // ----------------------------------------
-#ifdef ROCKETFLIGHT_GPS
+#ifdef ROCKETFLIGHT_SCREEN
+#define METERS_TO_FEET 3.28084
+#define USERPREFS_HAS_SPLASH 1
+#endif
+
+// ----------------------------------------
+#ifdef ROCKETFLIGHT_POSITION
+
 #ifdef GPS_THREAD_INTERVAL
 #undef GPS_THREAD_INTERVAL
 #endif
 #define GPS_THREAD_INTERVAL 100
 #define GPS_LOST_LOCK_MILLIS 5000
-#endif
 
-// ----------------------------------------
-#ifdef ROCKETFLIGHT_SCREEN
-#define USERPREFS_HAS_SPLASH 1
-#endif
-
-// ----------------------------------------
-#ifdef ROCKETFLIGHT_MODULE
-#define METERS_TO_FEET 3.28084
-#define ROCKETFLIGHT_MODULE_INTERVAL 1000
-#define ROCKETFLIGHT_MODULE_POSITION_PRECISION 31
+#define ROCKETFLIGHT_POSITION_INTERVAL 1000
+#define ROCKETFLIGHT_POSITION_POSITION_PRECISION 31
 #define ROCKETFLIGHT_MAX_CHANNEL_UTIL_PERCENT 60
 #define ROCKETFLIGHT_REFERENCE_ALTITUDE_SAMPLE_SIZE 10
 #define ROCKETFLIGHT_REFERENCE_ALTITUDE_SAMPLE_MILLIS 500
+
+// ----------------------------------------
+#ifdef ROCKETFLIGHT_FLIGHT
 
 #define BMP3XX_INTERRUPT_PIN 46             // interrupt pin for the BMP3XX to signal a new reading
 
@@ -60,6 +61,9 @@
 // #define ICM_20948_DEBUG 1                // uncomment to enable debug on Serial
 // #define ICM_20948_DMP_IS_ENABLED 1       // uncomment to enable the digital motion processor
 
+#endif
+
+// ----------------------------------------
 // Exclude modules that are not relevant to rocketry
 #define MESHTASTIC_EXCLUDE_WIFI 1
 #define MESHTASTIC_EXCLUDE_MQTT 1

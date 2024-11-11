@@ -1,6 +1,6 @@
 #include "RocketFlightModule.h"
 
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
 
 bool RocketFlightModule::wantUIFrame()
 {

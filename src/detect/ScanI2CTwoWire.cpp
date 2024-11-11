@@ -2,7 +2,7 @@
 
 #if !MESHTASTIC_EXCLUDE_I2C
 
-#ifndef ROCKETFLIGHT_MODULE
+#ifndef ROCKETFLIGHT_POSITION
 #include "concurrency/LockGuard.h"
 #endif
 #if defined(ARCH_PORTDUINO)
@@ -29,7 +29,7 @@ bool in_array(uint8_t *array, int size, uint8_t lookfor)
 
 ScanI2C::FoundDevice ScanI2CTwoWire::find(ScanI2C::DeviceType type) const
 {
-#ifndef ROCKETFLIGHT_MODULE
+#ifndef ROCKETFLIGHT_POSITION
     concurrency::LockGuard guard((concurrency::Lock *)&lock);
 #endif
 
@@ -43,7 +43,7 @@ bool ScanI2CTwoWire::exists(ScanI2C::DeviceType type) const
 
 ScanI2C::FoundDevice ScanI2CTwoWire::firstOfOrNONE(size_t count, DeviceType types[]) const
 {
-#ifndef ROCKETFLIGHT_MODULE
+#ifndef ROCKETFLIGHT_POSITION
     concurrency::LockGuard guard((concurrency::Lock *)&lock);
 #endif
 
@@ -154,7 +154,7 @@ uint16_t ScanI2CTwoWire::getRegisterValue(const ScanI2CTwoWire::RegisterLocation
 
 void ScanI2CTwoWire::scanPort(I2CPort port, uint8_t *address, uint8_t asize)
 {
-#ifndef ROCKETFLIGHT_MODULE
+#ifndef ROCKETFLIGHT_POSITION
     concurrency::LockGuard guard((concurrency::Lock *)&lock);
 #endif
 

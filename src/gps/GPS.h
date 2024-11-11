@@ -11,7 +11,7 @@
 #include "input/UpDownInterruptImpl1.h"
 #include "modules/PositionModule.h"
 
-#ifdef ROCKETFLIGHT_GPS
+#ifdef ROCKETFLIGHT_POSITION
 #include "modules/Telemetry/Sensor/Altimeter.h"
 #endif
 
@@ -80,7 +80,7 @@ class GPS : private concurrency::OSThread
     uint8_t fixType = 0;      // fix type from GPGSA
 #endif
   private:
-#ifdef ROCKETFLIGHT_GPS
+#ifdef ROCKETFLIGHT_POSITION
   protected:
 #endif
 
@@ -314,7 +314,7 @@ class GPS : private concurrency::OSThread
      */
     void setPowerUBLOX(bool on, uint32_t sleepMs = 0);
 
-#ifdef ROCKETFLIGHT_GPS
+#ifdef ROCKETFLIGHT_POSITION
   protected:
 #endif
 
@@ -336,7 +336,7 @@ class GPS : private concurrency::OSThread
   protected:
     GnssModel_t gnssModel = GNSS_MODEL_UNKNOWN;
 
-#ifdef ROCKETFLIGHT_GPS
+#ifdef ROCKETFLIGHT_POSITION
     public:
       inline virtual Altimeter* asAltimeter() {return nullptr;}
 #endif

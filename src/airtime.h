@@ -67,7 +67,7 @@ class AirTime : private concurrency::OSThread
     uint8_t lastUtilPeriod = 0;
     uint8_t lastUtilPeriodTX = 0;
     uint32_t secSinceBoot = 0;
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
     uint8_t max_channel_util_percent = ROCKETFLIGHT_MAX_CHANNEL_UTIL_PERCENT;
 #else
     uint8_t max_channel_util_percent = 40;

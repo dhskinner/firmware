@@ -1,6 +1,6 @@
 #include "configuration.h"
 
-#if !MESHTASTIC_EXCLUDE_GPS && defined(ROCKETFLIGHT_GPS)
+#if !MESHTASTIC_EXCLUDE_GPS && defined(ROCKETFLIGHT_POSITION)
 
 #include "RocketFlightGPS.h"
 

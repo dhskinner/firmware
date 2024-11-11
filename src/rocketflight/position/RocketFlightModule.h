@@ -1,10 +1,10 @@
 #pragma once
-#ifndef _ROCKETFLIGHT_MODULE_H_
-#define _ROCKETFLIGHT_MODULE_H_
+#ifndef _ROCKETFLIGHT_POSITION_H_
+#define _ROCKETFLIGHT_POSITION_H_
 
 #include "../configuration.h"
 
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
 
 #include <cmath>
 #include <vector>

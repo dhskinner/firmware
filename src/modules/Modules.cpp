@@ -29,7 +29,7 @@
 #include "modules/NodeInfoModule.h"
 #endif
 #if !MESHTASTIC_EXCLUDE_GPS
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
 #include "rocketflight/module/RocketflightModule.h"
 #else
 #include "modules/PositionModule.h"
@@ -61,7 +61,7 @@
 #if HAS_SENSOR && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR
 #include "main.h"
 #include "modules/Telemetry/AirQualityTelemetry.h"
-#if ROCKETFLIGHT_MODULE && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_TELEMETRY
+#if ROCKETFLIGHT_POSITION && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_TELEMETRY
 // Disable environmental and health telemetry
 #include "modules/Telemetry/EnvironmentTelemetry.h"
 #include "modules/Telemetry/HealthTelemetry.h"
@@ -113,7 +113,7 @@ void setupModules()
         nodeInfoModule = new NodeInfoModule();
 #endif
 #if !MESHTASTIC_EXCLUDE_GPS
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
         positionModule = new RocketFlightModule();
 #else
         positionModule = new PositionModule();
@@ -202,7 +202,7 @@ void setupModules()
         new DeviceTelemetryModule();
 #endif
 #if HAS_SENSOR && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR
-#if ROCKETFLIGHT_MODULE && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_TELEMETRY
+#if ROCKETFLIGHT_POSITION && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_TELEMETRY
         // Disable environmental and health telemetry
         new EnvironmentTelemetryModule();
         if (nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_PMSA003I].first > 0) {

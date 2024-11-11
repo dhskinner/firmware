@@ -1,6 +1,6 @@
 #include "RocketFlightModule.h"
 
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
 
 RocketFlightModule::RocketFlightModule() : PositionModule::PositionModule()
 {
@@ -84,7 +84,7 @@ bool RocketFlightModule::init()
             altimeter = new Altimeter(meshtastic_TelemetrySensorType::meshtastic_TelemetrySensorType_CUSTOM_SENSOR, "Fixed", meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_MANUAL, static_cast<double>(localPosition.altitude));
             break;
         }
-#ifdef ROCKETFLIGHT_GPS
+#ifdef ROCKETFLIGHT_POSITION
         // is Rocketflight GPS available?
         if (gps != nullptr)
         {
@@ -99,7 +99,7 @@ bool RocketFlightModule::init()
     LOG_INFO("Altimeter type: %s status: %s", altimeter->name(), altimeter->isValid() ? "ok" : "failed");
 
     // start sending positions immediately
-    setIntervalFromNow(ROCKETFLIGHT_MODULE_INTERVAL);
+    setIntervalFromNow(ROCKETFLIGHT_POSITION_INTERVAL);
 
     return true;
 }
@@ -115,7 +115,7 @@ int32_t RocketFlightModule::runOnce()
     if (node == nullptr)
     {
         LOG_DEBUG("RunOnce could not get own node");
-        return ROCKETFLIGHT_MODULE_INTERVAL;
+        return ROCKETFLIGHT_POSITION_INTERVAL;
     }
 
     // Only send packets if the channel util. is less than a given threshold
@@ -123,21 +123,21 @@ int32_t RocketFlightModule::runOnce()
                                          config.device.role != meshtastic_Config_DeviceConfig_Role_TAK_TRACKER))
     {
         LOG_DEBUG("Skipped sending due to channel congestion");
-        return ROCKETFLIGHT_MODULE_INTERVAL;
+        return ROCKETFLIGHT_POSITION_INTERVAL;
     }
 
     // Only send every n milliseconds
     uint32_t now = millis();
     if ((now - lastGpsSend) < minimumTimeThreshold)
     {
-        return ROCKETFLIGHT_MODULE_INTERVAL;
+        return ROCKETFLIGHT_POSITION_INTERVAL;
     }
 
     // If in smart position mode, send every n metres up to a maximum of n milliseconds
     if (config.position.position_broadcast_smart_enabled 
     && ((now - lastGpsSend) < maximumTimeThreshold) && !hasMoved())
     {
-        return ROCKETFLIGHT_MODULE_INTERVAL;
+        return ROCKETFLIGHT_POSITION_INTERVAL;
     }
 
     // Send it
@@ -147,8 +147,8 @@ int32_t RocketFlightModule::runOnce()
         sendLostAndFoundText();
     }
 
-    LOG_DEBUG("Will run again in %d msec", ROCKETFLIGHT_MODULE_INTERVAL);
-    return ROCKETFLIGHT_MODULE_INTERVAL;
+    LOG_DEBUG("Will run again in %d msec", ROCKETFLIGHT_POSITION_INTERVAL);
+    return ROCKETFLIGHT_POSITION_INTERVAL;
 }
 
 void RocketFlightModule::handleNewPosition()

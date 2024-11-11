@@ -6,7 +6,7 @@
 /**
  * Position module for sending/receiving positions into the mesh
  */
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
 class PositionModule : public ProtobufModule<meshtastic_Position>, protected concurrency::OSThread
 {
   protected:
@@ -39,7 +39,7 @@ class PositionModule : public ProtobufModule<meshtastic_Position>, private concu
     /**
      * Send our position into the mesh
      */
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
     virtual void sendOurPosition(NodeNum dest, bool wantReplies = false, uint8_t channel = 0);
     virtual void sendOurPosition();
     virtual void handleNewPosition();
@@ -66,7 +66,7 @@ class PositionModule : public ProtobufModule<meshtastic_Position>, private concu
     /** Does our periodic broadcast */
     virtual int32_t runOnce() override;
 
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
   protected:
     virtual struct SmartPosition getDistanceTraveledSinceLastSend(meshtastic_PositionLite currentPosition);
     virtual meshtastic_MeshPacket *allocAtakPli();

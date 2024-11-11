@@ -1,12 +1,12 @@
 #pragma once
-#ifndef _ACCELEROMETER_H_
-#define _ACCELEROMETER_H_
+#ifndef _ROCKETFLIGHT_MOTION_H_
+#define _ROCKETFLIGHT_MOTION_H_
 
 #include "configuration.h"
 
 #if !defined(ARCH_PORTDUINO) && !defined(ARCH_STM32WL) && !MESHTASTIC_EXCLUDE_I2C
 
-#include "../concurrency/OSThread.h"
+#include "motion/AccelerometerThread.h"
 #include "BMA423Sensor.h"
 #include "BMX160Sensor.h"
 #include "ICM20948Sensor.h"
@@ -25,23 +25,23 @@ extern ScanI2C::FoundDevice accelerometer_found;
 extern ScanI2C::DeviceAddress accelerometer_found;
 #endif
 
-class AccelerometerThread : public concurrency::OSThread
+class RocketFlightMotionThread : public concurrency::OSThread
 {
   private:
     MotionSensor *sensor = nullptr;
     bool isInitialised = false;
 
   public:
-    explicit AccelerometerThread(ScanI2C::FoundDevice foundDevice) : OSThread("Accelerometer")
+    explicit RocketFlightMotionThread(ScanI2C::FoundDevice foundDevice) : OSThread("Accelerometer")
     {
         device = foundDevice;
         init();
     }
 
 #ifdef ROCKETFLIGHT_POSITION
-    explicit AccelerometerThread(ScanI2C::DeviceType type) : AccelerometerThread(accelerometer_found)
+    explicit RocketFlightMotionThread(ScanI2C::DeviceType type) : RocketFlightMotionThread(accelerometer_found)
 #else
-    explicit AccelerometerThread(ScanI2C::DeviceType type) : AccelerometerThread(ScanI2C::FoundDevice{type, accelerometer_found})
+    explicit RocketFlightMotionThread(ScanI2C::DeviceType type) : RocketFlightMotionThread(ScanI2C::FoundDevice{type, accelerometer_found})
 #endif
     {
     }
@@ -55,11 +55,12 @@ class AccelerometerThread : public concurrency::OSThread
   protected:
     int32_t runOnce() override
     {
-        // Assume we should not keep the board awake
-        canSleep = true;
+        // Assume we should keep the board awake
+        canSleep = false;
 
-        if (isInitialised)
+        if (isInitialised) {
             return sensor->runOnce();
+        }
 
         return MOTION_SENSOR_CHECK_INTERVAL_MS;
     }

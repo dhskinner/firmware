@@ -1,9 +1,9 @@
 #pragma once
-#ifndef _ROCKETFLIGHT_GPS_
-#define _ROCKETFLIGHT_GPS_
+#ifndef _ROCKETFLIGHT_POSITION_
+#define _ROCKETFLIGHT_POSITION_
 
 #include "configuration.h"
-#if !MESHTASTIC_EXCLUDE_GPS && defined(ROCKETFLIGHT_GPS)
+#if !MESHTASTIC_EXCLUDE_GPS && defined(ROCKETFLIGHT_POSITION)
 
 #include "GPS.h"
 #include "meshUtils.h"

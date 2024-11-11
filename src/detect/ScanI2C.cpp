@@ -41,7 +41,7 @@ ScanI2C::FoundDevice ScanI2C::firstAccelerometer() const
     return firstOfOrNONE(8, types);
 }
 
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
 ScanI2C::FoundDevice ScanI2C::firstAltimeter() const
 {
     ScanI2C::DeviceType types[] = {BMP_3XX, BME_280, BME_680, BMP_280, BMP_085, LPS22HB};

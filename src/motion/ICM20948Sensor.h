@@ -42,7 +42,7 @@
 #endif
 
 // The I2C address of the Accelerometer (if found) from main.cpp
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
 extern ScanI2C::FoundDevice accelerometer_found;
 #else
 extern ScanI2C::DeviceAddress accelerometer_found;

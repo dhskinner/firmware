@@ -117,7 +117,7 @@ class ScanI2C
 
     FoundDevice firstAccelerometer() const;
 
-#ifdef ROCKETFLIGHT_MODULE
+#ifdef ROCKETFLIGHT_POSITION
     FoundDevice firstAltimeter() const;
 #endif
 

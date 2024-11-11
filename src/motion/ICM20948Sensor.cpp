@@ -24,7 +24,7 @@ bool ICM20948Sensor::init()
     return sensor->setWakeOnMotion();
 }
 
-#ifdef ICM_20948_INT_PIN
+#ifdef ICM_20948_INTERRUPT_PIN
 
 int32_t ICM20948Sensor::runOnce()
 {
@@ -121,7 +121,7 @@ bool ICM20948Singleton::init(ScanI2C::FoundDevice device)
         return false;
     }
 
-#ifdef ICM_20948_INT_PIN
+#ifdef ICM_20948_INTERRUPT_PIN
 
     // Active low
     cfgIntActiveLow(true);
@@ -140,10 +140,10 @@ bool ICM20948Singleton::init(ScanI2C::FoundDevice device)
     LOG_DEBUG("ICM20948 init set cfgIntLatch - %s", statusString());
 
     // Set up an interrupt pin with an internal pullup for active low
-    pinMode(ICM_20948_INT_PIN, INPUT_PULLUP);
+    pinMode(ICM_20948_INTERRUPT_PIN, INPUT_PULLUP);
 
     // Set up an interrupt service routine
-    attachInterrupt(ICM_20948_INT_PIN, ICM20948SetInterrupt, FALLING);
+    attachInterrupt(ICM_20948_INTERRUPT_PIN, ICM20948SetInterrupt, FALLING);
 
 #endif
     return true;

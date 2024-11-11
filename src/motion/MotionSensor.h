@@ -2,8 +2,9 @@
 #ifndef _MOTION_SENSOR_H_
 #define _MOTION_SENSOR_H_
 
+#ifndef MOTION_SENSOR_CHECK_INTERVAL_MS
 #define MOTION_SENSOR_CHECK_INTERVAL_MS 100
-#define MOTION_SENSOR_CLICK_THRESHOLD 40
+#endif
 
 #include "../configuration.h"
 

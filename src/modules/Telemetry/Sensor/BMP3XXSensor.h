@@ -7,14 +7,35 @@
 
 #include "TelemetrySensor.h"
 #include "Altimeter.h"
+#ifdef BMP3XX_INTERRUPT_PIN
+#include <DFRobot_BMP3XX.h>
+#else
 #include <Adafruit_BMP3XX.h>
+#endif
 #include <typeinfo>
 
 extern std::pair<uint8_t, TwoWire *> nodeTelemetrySensorsMap[];
 
+#if defined(BMP3XX_INTERRUPT_PIN) && defined(ARCH_ESP32)
+
+// Singleton wrapper for the DFRobot_BMP388_I2C class
+class BMP3XXSingleton : public DFRobot_BMP388_I2C
+{
+  public:
+
+  // Temperature in celcius, assigned after calling performReading()
+  double temperature = 0.0;
+
+  // Pressure in pascals, assigned after calling performReading()
+  double pressure = 0.0;
+
+#else
+
 // Singleton wrapper for the Adafruit_BMP3XX class
 class BMP3XXSingleton : public Adafruit_BMP3XX
 {
+#endif
+
 private:
   static BMP3XXSingleton *pinstance;
 

@@ -14,10 +14,10 @@ extern meshtastic_User &owner;
 void NodeDB::loadFromJson()
 {
     // TODO TODO
-    // LOG_INFO("RocketFlightDB printing config\n");
+    // LOG_INFO("RocketFlightDB printing config");
     // RocketFlightDB::printJson();
 
-    LOG_INFO("RocketFlight is checking config - all settings will be reset except for username\n");
+    LOG_INFO("RocketFlight is checking config - all settings will be reset except for username");
 
     uint32_t ownerCRC = crc32Buffer(&owner, sizeof(owner));
     uint32_t configCRC = crc32Buffer(&config, sizeof(config));

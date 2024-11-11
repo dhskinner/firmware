@@ -61,8 +61,11 @@
 #if HAS_SENSOR && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR
 #include "main.h"
 #include "modules/Telemetry/AirQualityTelemetry.h"
+#if ROCKETFLIGHT_MODULE && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_TELEMETRY
+// Disable environmental and health telemetry
 #include "modules/Telemetry/EnvironmentTelemetry.h"
 #include "modules/Telemetry/HealthTelemetry.h"
+#endif
 #endif
 #if HAS_TELEMETRY && !MESHTASTIC_EXCLUDE_POWER_TELEMETRY
 #include "modules/Telemetry/PowerTelemetry.h"
@@ -199,6 +202,8 @@ void setupModules()
         new DeviceTelemetryModule();
 #endif
 #if HAS_SENSOR && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR
+#if ROCKETFLIGHT_MODULE && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_TELEMETRY
+        // Disable environmental and health telemetry
         new EnvironmentTelemetryModule();
         if (nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_PMSA003I].first > 0) {
             new AirQualityTelemetryModule();
@@ -207,6 +212,7 @@ void setupModules()
             nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_MLX90614].first > 0) {
             new HealthTelemetryModule();
         }
+#endif
 #endif
 #if HAS_TELEMETRY && !MESHTASTIC_EXCLUDE_POWER_TELEMETRY && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR
         new PowerTelemetryModule();

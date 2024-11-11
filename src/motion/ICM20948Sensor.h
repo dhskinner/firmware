@@ -23,9 +23,9 @@
 #define ICM_20948_WOM_THRESHOLD 16U
 #endif
 
-// Define a pin in variant.h to use interrupts to read the ICM-20948
-#ifndef ICM_20948_WOM_THRESHOLD
-#define ICM_20948_INT_PIN 255
+// Define a pin in userPrefs.h to use interrupts to read the ICM-20948
+#ifndef ICM_20948_INTERRUPT_PIN
+#define ICM_20948_INTERRUPT_PIN 255
 #endif
 
 // Uncomment this line to enable helpful debug messages on Serial

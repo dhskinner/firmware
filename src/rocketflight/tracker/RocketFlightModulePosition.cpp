@@ -10,7 +10,7 @@ RocketFlightModule::RocketFlightModule() : PositionModule::PositionModule()
 
 bool RocketFlightModule::init()
 {
-    LOG_INFO("Initializing\n");
+    LOG_INFO("Initializing");
     OSThread::ThreadName = "RocketFlightModule";
 
     // set a short timeframe between successive position broadcasts (milliseconds)
@@ -96,7 +96,7 @@ bool RocketFlightModule::init()
         altimeter = new Altimeter(meshtastic_TelemetrySensorType::meshtastic_TelemetrySensorType_SENSOR_UNSET, "None", meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_UNSET);
         break;
     }
-    LOG_INFO("Altimeter type: %s status: %s\n", altimeter->name(), altimeter->isValid() ? "ok" : "failed");
+    LOG_INFO("Altimeter type: %s status: %s", altimeter->name(), altimeter->isValid() ? "ok" : "failed");
 
     // // get the motion processor if one is available
     // switch (accelerometer_found.type)
@@ -104,9 +104,9 @@ bool RocketFlightModule::init()
     //     case ScanI2C::DeviceType::ICM20948:
     //         mpu = ICM20948Singleton::GetInstance();
     //         bool result = mpu->init();
-    //         LOG_DEBUG("RocketFlightModule::init: motion processor %s\n", result ? "ok" : "fail");
+    //         LOG_DEBUG("RocketFlightModule::init: motion processor %s", result ? "ok" : "fail");
     //         result = mpu->setWakeOnMotion();
-    //         LOG_DEBUG("RocketFlightModule::init: wake on motion %s\n", result ? "ok" : "fail");
+    //         LOG_DEBUG("RocketFlightModule::init: wake on motion %s", result ? "ok" : "fail");
     //     default:
 
     // }
@@ -127,7 +127,7 @@ int32_t RocketFlightModule::runOnce()
     meshtastic_NodeInfoLite *node = nodeDB->getMeshNode(nodeDB->getNodeNum());
     if (node == nullptr)
     {
-        LOG_DEBUG("RunOnce could not get own node\n");
+        LOG_DEBUG("RunOnce could not get own node");
         return ROCKETFLIGHT_MODULE_INTERVAL;
     }
 
@@ -135,7 +135,7 @@ int32_t RocketFlightModule::runOnce()
     if (!airTime->isTxAllowedChannelUtil(config.device.role != meshtastic_Config_DeviceConfig_Role_TRACKER &&
                                          config.device.role != meshtastic_Config_DeviceConfig_Role_TAK_TRACKER))
     {
-        LOG_DEBUG("Skipped sending due to channel congestion\n");
+        LOG_DEBUG("Skipped sending due to channel congestion");
         return ROCKETFLIGHT_MODULE_INTERVAL;
     }
 
@@ -186,7 +186,7 @@ int32_t RocketFlightModule::runOnce()
         sendLostAndFoundText();
     }
 
-    LOG_DEBUG("Will run again in %d msec\n", ROCKETFLIGHT_MODULE_INTERVAL);
+    LOG_DEBUG("Will run again in %d msec", ROCKETFLIGHT_MODULE_INTERVAL);
     return ROCKETFLIGHT_MODULE_INTERVAL;
 }
 
@@ -220,11 +220,11 @@ meshtastic_MeshPacket *RocketFlightModule::allocReply()
     // lat/lon are included if available
     if (localPosition.latitude_i == 0 && localPosition.longitude_i == 0)
     {
-        LOG_WARN("Position is unknown - lat/lon are zero\n");
+        LOG_WARN("Position is unknown - lat/lon are zero");
     }
     else
     {
-        LOG_DEBUG("Sending location with precision %i\n", precision);
+        LOG_DEBUG("Sending location with precision %i", precision);
         if (precision < 32 && precision > 0)
         {
             p.latitude_i = localPosition.latitude_i & (UINT32_MAX << (32 - precision));
@@ -323,16 +323,16 @@ meshtastic_MeshPacket *RocketFlightModule::allocReply()
     // without can get time.
     if (getRTCQuality() < RTCQualityNTP)
     {
-        LOG_DEBUG("Stripping time %u from position send\n", p.time);
+        LOG_DEBUG("Stripping time %u from position send", p.time);
         p.time = 0;
     }
     else
     {
         p.time = getValidTime(RTCQualityNTP);
-        LOG_DEBUG("Providing time to mesh %u\n", p.time);
+        LOG_DEBUG("Providing time to mesh %u", p.time);
     }
 
-    LOG_INFO("Position: time=%i lat=%i lon=%i alt=%i\n", p.time, p.latitude_i, p.longitude_i, p.altitude);
+    LOG_INFO("Position: time=%i lat=%i lon=%i alt=%i", p.time, p.latitude_i, p.longitude_i, p.altitude);
 
     // Set the current coords as our last ones, after we've compared distance with current and decided to send
     if (p.latitude_i != 0 && p.longitude_i != 0)
@@ -377,7 +377,7 @@ bool RocketFlightModule::hasMoved()
     // Has position moved?
     bool moved = distanceTraveled > config.position.broadcast_smart_minimum_distance || altitudeTravelled > config.position.broadcast_smart_minimum_distance;
 
-    LOG_DEBUG("Moved: %s horiz: %dm vert: %dm threshold: %dm elapsed: %dms \n",
+    LOG_DEBUG("Moved: %s horiz: %dm vert: %dm threshold: %dm elapsed: %dms ",
               moved ? "yes" : "no",
               distanceTraveled,
               altitudeTravelled,
@@ -390,7 +390,7 @@ void RocketFlightModule::deepSleep()
 {
     sleepOnNextExecution = false;
     uint32_t nightyNightMs = Default::getConfiguredOrDefaultMs(config.position.position_broadcast_secs);
-    LOG_DEBUG("Deep sleeping for %ims, then awaking to send position again.\n", nightyNightMs);
+    LOG_DEBUG("Deep sleeping for %ims, then awaking to send position again.", nightyNightMs);
     doDeepSleep(nightyNightMs, false);
 }
 

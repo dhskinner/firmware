@@ -580,9 +580,9 @@ void setup()
 #if !defined(ARCH_PORTDUINO) && !defined(ARCH_STM32WL)
 #ifdef ROCKETFLIGHT_MODULE
     altimeter_found = i2cScanner->firstAltimeter();
-    LOG_DEBUG("alt_info = %i\n", altimeter_found.type);
+    LOG_DEBUG("alt_info = %i", altimeter_found.type);
     accelerometer_found = i2cScanner->firstAccelerometer();
-    LOG_DEBUG("acc_info = %i\n", accelerometer_found.type);
+    LOG_DEBUG("acc_info = %i", accelerometer_found.type);
 #else
     auto acc_info = i2cScanner->firstAccelerometer();
     accelerometer_found = acc_info.type != ScanI2C::DeviceType::NONE ? acc_info.address : accelerometer_found;

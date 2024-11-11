@@ -32,14 +32,14 @@ int32_t RocketFlightGPS::runOnce()
         {
             if (!hasValidLocation) 
             {
-                LOG_INFO("got GPS lock\n");
+                LOG_INFO("got GPS lock");
                 hasValidLocation = true;
             }   
             lastReceivedPositionMillis = millis();
             shouldPublish = true;  
 
         } else if (millis() - lastReceivedPositionMillis > GPS_LOST_LOCK_MILLIS && hasValidLocation) {
-            LOG_WARN("lost GPS lock\n");
+            LOG_WARN("lost GPS lock");
             p = meshtastic_Position_init_default;
             hasValidLocation = false;
             shouldPublish = true;
@@ -133,7 +133,7 @@ GPS *RocketFlightGPS::createGps()
     // see NMEAGPS.h
     gsafixtype.begin(reader, NMEA_MSG_GXGSA, 2);
     gsapdop.begin(reader, NMEA_MSG_GXGSA, 15);
-    LOG_DEBUG("Using " NMEA_MSG_GXGSA " for 3DFIX and PDOP\n");
+    LOG_DEBUG("Using " NMEA_MSG_GXGSA " for 3DFIX and PDOP");
 #endif
 
     // Make sure the GPS is awake before performing any init.
@@ -154,8 +154,8 @@ GPS *RocketFlightGPS::createGps()
 
 //  ESP32 has a special set of parameters vs other arduino ports
 #if defined(ARCH_ESP32)
-        LOG_DEBUG("Using GPIO%d for GPS RX\n", new_gps->rx_gpio);
-        LOG_DEBUG("Using GPIO%d for GPS TX\n", new_gps->tx_gpio);
+        LOG_DEBUG("Using GPIO%d for GPS RX", new_gps->rx_gpio);
+        LOG_DEBUG("Using GPIO%d for GPS TX", new_gps->tx_gpio);
         _serial_gps->begin(GPS_BAUDRATE, SERIAL_8N1, new_gps->rx_gpio, new_gps->tx_gpio);
 #elif defined(ARCH_RP2040)
         _serial_gps->setFIFOSize(256);

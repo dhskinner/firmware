@@ -30,7 +30,7 @@ RocketFlightDB::getRebroadcastMode(std::string key)
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config setting for RebroadcastMode is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config setting for RebroadcastMode is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DeviceConfig_RebroadcastMode_ALL;
 }
@@ -56,7 +56,7 @@ meshtastic_Config_DeviceConfig_Role RocketFlightDB::getDeviceRole(std::string ke
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for Device Role is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for Device Role is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DeviceConfig_Role_CLIENT;
 }
@@ -82,7 +82,7 @@ meshtastic_Config_PositionConfig_PositionFlags RocketFlightDB::getPositionFlag(s
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for position flags is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for position flags is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_PositionConfig_PositionFlags_UNSET;
 }
@@ -100,7 +100,7 @@ meshtastic_Config_PositionConfig_GpsMode RocketFlightDB::getGpsMode(std::string 
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for GPS mode is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for GPS mode is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_PositionConfig_GpsMode_ENABLED;
 }
@@ -117,7 +117,7 @@ meshtastic_Config_NetworkConfig_AddressMode RocketFlightDB::getAddressMode(std::
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for network mode is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for network mode is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_NetworkConfig_AddressMode_DHCP;
 }
@@ -138,7 +138,7 @@ meshtastic_Config_DisplayConfig_GpsCoordinateFormat RocketFlightDB::getGpsFormat
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for GPS coord format is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for GPS coord format is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_GpsCoordinateFormat_DEC;
 }
@@ -155,7 +155,7 @@ meshtastic_Config_DisplayConfig_DisplayUnits RocketFlightDB::getDisplayUnits(std
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for display units is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for display units is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_DisplayUnits_METRIC;
 }
@@ -174,7 +174,7 @@ meshtastic_Config_DisplayConfig_OledType RocketFlightDB::getOledType(std::string
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for OLED type is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for OLED type is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_OledType_OLED_AUTO;
 }
@@ -193,7 +193,7 @@ meshtastic_Config_DisplayConfig_DisplayMode RocketFlightDB::getDisplayMode(std::
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for OLED display mode is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for OLED display mode is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT;
 }
@@ -216,7 +216,7 @@ meshtastic_Config_DisplayConfig_CompassOrientation RocketFlightDB::getCompassOri
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for compass orientation is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for compass orientation is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_CompassOrientation_DEGREES_0;
 }
@@ -250,7 +250,7 @@ meshtastic_Config_LoRaConfig_RegionCode RocketFlightDB::getRegionCode(std::strin
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for region code is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for region code is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_LoRaConfig_RegionCode_UNSET;
 }
@@ -274,7 +274,7 @@ meshtastic_Config_LoRaConfig_ModemPreset RocketFlightDB::getModemPreset(std::str
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for modem preset is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for modem preset is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_LoRaConfig_ModemPreset_LONG_FAST;
 }
@@ -292,7 +292,7 @@ meshtastic_Config_BluetoothConfig_PairingMode RocketFlightDB::getPairingMode(std
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for bluetooth pairing is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for bluetooth pairing is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_BluetoothConfig_PairingMode_RANDOM_PIN;
 }
@@ -310,7 +310,7 @@ meshtastic_Channel_Role RocketFlightDB::getChannelRole(std::string key)
 
     if (IsNotNull(key))
     {
-        LOG_ERROR("Config for channel role is unknown - could not find '%s'\n", key.c_str());
+        LOG_ERROR("Config for channel role is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Channel_Role_DISABLED;
 }
@@ -329,7 +329,7 @@ meshtastic_Channel_Role RocketFlightDB::getChannelRole(std::string key)
 
 //     if (IsNotNull(key))
 //     {
-//         LOG_ERROR("Config for font size is unknown - could not find '%s'\n", key.c_str());
+//         LOG_ERROR("Config for font size is unknown - could not find '%s'", key.c_str());
 //     }
 //     return meshtastic_ScreenFonts_FONT_SMALL;
 // }

@@ -4,21 +4,25 @@
 
 #include "../mesh/generated/meshtastic/telemetry.pb.h"
 #include "TelemetrySensor.h"
+#include "Altimeter.h"
 #include <Adafruit_LPS2X.h>
 #include <Adafruit_Sensor.h>
 
-class LPS22HBSensor : public TelemetrySensor
+class LPS22HBSensor : public TelemetrySensor, public Altimeter
 {
-  private:
-    Adafruit_LPS22 lps22hb;
-
   protected:
+    Adafruit_LPS22 lps22hb;
     virtual void setup() override;
 
   public:
     LPS22HBSensor();
+    ~LPS22HBSensor();
     virtual int32_t runOnce() override;
     virtual bool getMetrics(meshtastic_Telemetry *measurement) override;
+    virtual double getAltitude() override;
+
+    // Return true if the sensor is ok
+    inline bool isValid() override { return status; };
 };
 
 #endif

@@ -8,7 +8,9 @@
 #include <Adafruit_LPS2X.h>
 #include <Adafruit_Sensor.h>
 
-LPS22HBSensor::LPS22HBSensor() : TelemetrySensor(meshtastic_TelemetrySensorType_LPS22, "LPS22HB") {}
+LPS22HBSensor::LPS22HBSensor() : TelemetrySensor(meshtastic_TelemetrySensorType_LPS22, "LPS22HB"), Altimeter(meshtastic_TelemetrySensorType_LPS22, "LPS22HB", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC) {}
+
+LPS22HBSensor::~LPS22HBSensor() {};
 
 int32_t LPS22HBSensor::runOnce()
 {
@@ -38,6 +40,21 @@ bool LPS22HBSensor::getMetrics(meshtastic_Telemetry *measurement)
     measurement->variant.environment_metrics.barometric_pressure = pressure.pressure;
 
     return true;
+}
+
+double LPS22HBSensor::getAltitude()
+{
+    if (!isInitialized())
+        return INVALID_ALTITUDE;
+
+    sensors_event_t temp;
+    sensors_event_t pressure;
+    lps22hb.getEvent(&pressure, &temp);
+
+    if (pressure.pressure == 0)
+        return INVALID_ALTITUDE;
+
+    return Altimeter::hectopascalsToMetres(pressure.pressure);
 }
 
 #endif

@@ -4,20 +4,24 @@
 
 #include "../mesh/generated/meshtastic/telemetry.pb.h"
 #include "TelemetrySensor.h"
+#include "Altimeter.h"
 #include <Adafruit_BMP280.h>
 
-class BMP280Sensor : public TelemetrySensor
+class BMP280Sensor : public TelemetrySensor, public Altimeter
 {
-  private:
-    Adafruit_BMP280 bmp280;
-
   protected:
+    Adafruit_BMP280 bmp280;
     virtual void setup() override;
 
   public:
     BMP280Sensor();
+    ~BMP280Sensor();
     virtual int32_t runOnce() override;
     virtual bool getMetrics(meshtastic_Telemetry *measurement) override;
+    virtual double getAltitude() override;
+
+    // Return true if the sensor is ok
+    inline bool isValid() override { return status; };
 };
 
 #endif

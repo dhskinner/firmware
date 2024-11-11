@@ -7,7 +7,9 @@
 #include "FSCommon.h"
 #include "TelemetrySensor.h"
 
-BME680Sensor::BME680Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BME680, "BME680") {}
+BME680Sensor::BME680Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BME680, "BME680"), Altimeter(meshtastic_TelemetrySensorType_BME680, "BME680", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC) {}
+
+BME680Sensor::~BME680Sensor() {};
 
 int32_t BME680Sensor::runTrigger()
 {
@@ -143,6 +145,18 @@ void BME680Sensor::checkStatus(String functionName)
         LOG_ERROR("%s BME68X code: %s", functionName.c_str(), String(bme680.sensor.status).c_str());
     else if (bme680.sensor.status > BME68X_OK)
         LOG_WARN("%s BME68X code: %s", functionName.c_str(), String(bme680.sensor.status).c_str());
+}
+
+double BME680Sensor::getAltitude()
+{
+    if (!isInitialized())
+        return INVALID_ALTITUDE;
+
+    float pressure = bme680.getData(BSEC_OUTPUT_RAW_PRESSURE).signal;
+    if (pressure == 0)
+        return INVALID_ALTITUDE;
+
+    return Altimeter::hectopascalsToMetres(pressure / 100.0F);
 }
 
 #endif

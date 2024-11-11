@@ -8,7 +8,9 @@
 #include <Adafruit_BMP085.h>
 #include <typeinfo>
 
-BMP085Sensor::BMP085Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BMP085, "BMP085") {}
+BMP085Sensor::BMP085Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BMP085, "BMP085"), Altimeter(meshtastic_TelemetrySensorType_BMP085, "BMP085", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC){}
+
+BMP085Sensor::~BMP085Sensor() {};
 
 int32_t BMP085Sensor::runOnce()
 {
@@ -34,6 +36,18 @@ bool BMP085Sensor::getMetrics(meshtastic_Telemetry *measurement)
     measurement->variant.environment_metrics.barometric_pressure = bmp085.readPressure() / 100.0F;
 
     return true;
+}
+
+double BMP085Sensor::getAltitude()
+{
+    if (!isInitialized())
+        return INVALID_ALTITUDE;
+
+    float pressure = bmp085.readPressure();
+    if (pressure == 0)
+        return INVALID_ALTITUDE;
+
+    return Altimeter::hectopascalsToMetres(pressure / 100.0F);
 }
 
 #endif

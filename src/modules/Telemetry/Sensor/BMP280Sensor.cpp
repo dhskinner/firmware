@@ -8,7 +8,9 @@
 #include <Adafruit_BMP280.h>
 #include <typeinfo>
 
-BMP280Sensor::BMP280Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BMP280, "BMP280") {}
+BMP280Sensor::BMP280Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BMP280, "BMP280"), Altimeter(meshtastic_TelemetrySensorType_BMP280, "BMP280", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC) {}
+
+BMP280Sensor::~BMP280Sensor() {};
 
 int32_t BMP280Sensor::runOnce()
 {
@@ -40,6 +42,18 @@ bool BMP280Sensor::getMetrics(meshtastic_Telemetry *measurement)
     measurement->variant.environment_metrics.barometric_pressure = bmp280.readPressure() / 100.0F;
 
     return true;
+}
+
+double BMP280Sensor::getAltitude()
+{
+    if (!isInitialized())
+        return INVALID_ALTITUDE;
+
+    float pressure = bmp280.readPressure();
+    if (pressure == 0)
+        return INVALID_ALTITUDE;
+
+    return Altimeter::hectopascalsToMetres(pressure / 100.0F);
 }
 
 #endif

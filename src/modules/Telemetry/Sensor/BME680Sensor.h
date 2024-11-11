@@ -4,6 +4,7 @@
 
 #include "../mesh/generated/meshtastic/telemetry.pb.h"
 #include "TelemetrySensor.h"
+#include "Altimeter.h"
 #include <bsec2.h>
 
 #define STATE_SAVE_PERIOD UINT32_C(360 * 60 * 1000) // That's 6 hours worth of millis()
@@ -12,12 +13,10 @@ const uint8_t bsec_config[] = {
 #include "config/bme680/bme680_iaq_33v_3s_4d/bsec_iaq.txt"
 };
 
-class BME680Sensor : public TelemetrySensor
+class BME680Sensor : public TelemetrySensor, public Altimeter
 {
-  private:
-    Bsec2 bme680;
-
   protected:
+    Bsec2 bme680;
     virtual void setup() override;
     const char *bsecConfigFileName = "/prefs/bsec.dat";
     uint8_t bsecState[BSEC_MAX_STATE_BLOB_SIZE] = {0};
@@ -38,9 +37,14 @@ class BME680Sensor : public TelemetrySensor
 
   public:
     BME680Sensor();
+    ~BME680Sensor();
     int32_t runTrigger();
     virtual int32_t runOnce() override;
     virtual bool getMetrics(meshtastic_Telemetry *measurement) override;
+    virtual double getAltitude() override;
+
+    // Return true if the sensor is ok
+    inline bool isValid() override { return status; };
 };
 
 #endif

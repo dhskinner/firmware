@@ -59,11 +59,11 @@ double Altimeter::getReferenceAltitude()
             std::sort(referenceAltitudeSamples.begin(), referenceAltitudeSamples.end());
 
             // use the median as the reference altitude
-            referenceAltitude = referenceAltitudeSamples[static_cast<int>(referenceAltitudeSamples.size()/2)];
+            referenceAltitude = referenceAltitudeSamples[static_cast<int>(referenceAltitudeSamples.size() / 2)];
             LOG_INFO("Altimeter reference altitude set to %.1f", referenceAltitude);
 
             // release memory from the samples vector
-            std::vector<double>().swap( referenceAltitudeSamples );
+            std::vector<double>().swap(referenceAltitudeSamples);
         }
     }
 

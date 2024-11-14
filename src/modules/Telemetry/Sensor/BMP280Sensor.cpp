@@ -8,9 +8,14 @@
 #include <Adafruit_BMP280.h>
 #include <typeinfo>
 
-BMP280Sensor::BMP280Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BMP280, "BMP280"), Altimeter(meshtastic_TelemetrySensorType_BMP280, "BMP280", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC) {}
+BMP280Sensor::BMP280Sensor()
+    : TelemetrySensor(meshtastic_TelemetrySensorType_BMP280, "BMP280"),
+      Altimeter(meshtastic_TelemetrySensorType_BMP280, "BMP280",
+                meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC)
+{
+}
 
-BMP280Sensor::~BMP280Sensor() {};
+BMP280Sensor::~BMP280Sensor(){};
 
 int32_t BMP280Sensor::runOnce()
 {

@@ -129,7 +129,7 @@ class NodeDB
     virtual void initConfigIntervals(), initModuleConfigIntervals(), resetNodes(), removeNodeByNum(NodeNum nodeNum);
 
     virtual bool factoryReset(bool eraseBleBonds = false);
-#else 
+#else
     void initConfigIntervals(), initModuleConfigIntervals(), resetNodes(), removeNodeByNum(NodeNum nodeNum);
 
     bool factoryReset(bool eraseBleBonds = false);
@@ -142,7 +142,7 @@ class NodeDB
 
 #ifdef ROCKETFLIGHT_CONFIG
     virtual void installRoleDefaults(meshtastic_Config_DeviceConfig_Role role);
-#else 
+#else
     void installRoleDefaults(meshtastic_Config_DeviceConfig_Role role);
 #endif
 

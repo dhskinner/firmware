@@ -8,9 +8,14 @@
 #include <Adafruit_BMP085.h>
 #include <typeinfo>
 
-BMP085Sensor::BMP085Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BMP085, "BMP085"), Altimeter(meshtastic_TelemetrySensorType_BMP085, "BMP085", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC){}
+BMP085Sensor::BMP085Sensor()
+    : TelemetrySensor(meshtastic_TelemetrySensorType_BMP085, "BMP085"),
+      Altimeter(meshtastic_TelemetrySensorType_BMP085, "BMP085",
+                meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC)
+{
+}
 
-BMP085Sensor::~BMP085Sensor() {};
+BMP085Sensor::~BMP085Sensor(){};
 
 int32_t BMP085Sensor::runOnce()
 {

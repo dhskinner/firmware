@@ -19,7 +19,7 @@
 #endif
 #include "STK8XXXSensor.h"
 
-#ifdef ROCKETFLIGHT_POSITION
+#if defined(ROCKETFLIGHT_POSITION) || defined(ROCKETFLIGHT_FLIGHT)
 extern ScanI2C::FoundDevice accelerometer_found;
 #else
 extern ScanI2C::DeviceAddress accelerometer_found;
@@ -27,7 +27,11 @@ extern ScanI2C::DeviceAddress accelerometer_found;
 
 class AccelerometerThread : public concurrency::OSThread
 {
+#ifdef ROCKETFLIGHT_FLIGHT
+  protected:
+#else
   private:
+#endif
     MotionSensor *sensor = nullptr;
     bool isInitialised = false;
 
@@ -64,7 +68,11 @@ class AccelerometerThread : public concurrency::OSThread
         return MOTION_SENSOR_CHECK_INTERVAL_MS;
     }
 
+#ifdef ROCKETFLIGHT_FLIGHT
+  protected:
+#else
   private:
+#endif
     ScanI2C::FoundDevice device;
 
     void init()
@@ -73,14 +81,14 @@ class AccelerometerThread : public concurrency::OSThread
             return;
 
         if (device.address.port == ScanI2C::I2CPort::NO_I2C || device.address.address == 0 || device.type == ScanI2C::NONE) {
-            LOG_DEBUG("AccelerometerThread Disable due to no sensors found");
+            LOG_DEBUG("AccelerometerThread disabled due to no sensors found");
             disable();
             return;
         }
 
 #ifndef RAK_4631
         if (!config.display.wake_on_tap_or_motion && !config.device.double_tap_as_button_press) {
-            LOG_DEBUG("AccelerometerThread Disable due to no interested configurations");
+            LOG_DEBUG("AccelerometerThread disabled due to no interested configurations");
             disable();
             return;
         }

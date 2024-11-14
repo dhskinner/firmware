@@ -33,7 +33,8 @@ void lateInitVariant()
     }
 #endif
 
-#if defined(VEXT_ENABLE) && (!defined(MESHTASTIC_EXCLUDE_GPS) || !defined(MESHTASTIC_EXCLUDE_SCREEN)) && !defined(MESHTASTIC_EXCLUDE_VEXT_ON_OFF)
+#if defined(VEXT_ENABLE) && (!defined(MESHTASTIC_EXCLUDE_GPS) || !defined(MESHTASTIC_EXCLUDE_SCREEN)) &&                         \
+    !defined(MESHTASTIC_EXCLUDE_VEXT_ON_OFF)
     // If either the GPS or the screen is on, turn on the external power regulator
     GpioPin *hwEnable = new GpioHwPin(VEXT_ENABLE);
     new GpioBinaryTransformer(virtGpsEnable, virtScreenEnable, hwEnable, GpioBinaryTransformer::Or);

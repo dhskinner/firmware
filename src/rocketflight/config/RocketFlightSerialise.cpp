@@ -1,8 +1,8 @@
+#include "Channels.h"
 #include "RocketFlightDB.h"
 #include <ErriezCRC32.h>
 #include <map>
 #include <string>
-#include "Channels.h"
 
 #ifdef ROCKETFLIGHT_CONFIG
 
@@ -11,12 +11,10 @@ extern meshtastic_LocalModuleConfig moduleConfig;
 extern meshtastic_ChannelFile channelFile;
 extern meshtastic_User &owner;
 
-template <typename T>
-void RocketFlightDB::serialiseByteArray(JsonObject &obj, std::string key, T &in)
+template <typename T> void RocketFlightDB::serialiseByteArray(JsonObject &obj, std::string key, T &in)
 {
     JsonArray array = obj[key].to<JsonArray>();
-    for (int i = 0; i < in.size; i++)
-    {
+    for (int i = 0; i < in.size; i++) {
         array.add((uint8_t)in.bytes[i]);
     }
 }
@@ -27,8 +25,7 @@ void RocketFlightDB::serialiseLocalConfig(JsonDocument &doc, meshtastic_LocalCon
     obj["version"] = in.version;
 
     obj["has_device"] = in.has_device;
-    if (in.has_device)
-    {
+    if (in.has_device) {
         JsonObject device = obj["device"].to<JsonObject>();
         device["role"] = getDeviceRole(in.device.role);
         device["serial_enabled"] = in.device.serial_enabled;
@@ -44,8 +41,7 @@ void RocketFlightDB::serialiseLocalConfig(JsonDocument &doc, meshtastic_LocalCon
     }
 
     obj["has_position"] = in.has_position;
-    if (in.has_position)
-    {
+    if (in.has_position) {
         JsonObject position = obj["position"].to<JsonObject>();
         position["position_broadcast_secs"] = in.position.position_broadcast_secs;
         position["position_broadcast_smart_enabled"] = in.position.position_broadcast_smart_enabled;
@@ -94,8 +90,7 @@ void RocketFlightDB::serialiseLocalConfig(JsonDocument &doc, meshtastic_LocalCon
     }
 
     obj["has_power"] = in.has_power;
-    if (in.has_power)
-    {
+    if (in.has_power) {
         JsonObject power = obj["power"].to<JsonObject>();
         power["is_power_saving"] = in.power.is_power_saving;
         power["on_battery_shutdown_after_secs"] = in.power.on_battery_shutdown_after_secs;
@@ -109,8 +104,7 @@ void RocketFlightDB::serialiseLocalConfig(JsonDocument &doc, meshtastic_LocalCon
     }
 
     obj["has_network"] = in.has_network;
-    if (in.has_network)
-    {
+    if (in.has_network) {
         JsonObject network = obj["network"].to<JsonObject>();
         network["wifi_enabled"] = in.network.wifi_enabled;
         network["wifi_ssid"] = in.network.wifi_ssid;
@@ -119,8 +113,7 @@ void RocketFlightDB::serialiseLocalConfig(JsonDocument &doc, meshtastic_LocalCon
         network["eth_enabled"] = in.network.eth_enabled;
         network["address_mode"] = getAddressMode(in.network.address_mode);
         network["has_ipv4_config"] = in.network.has_ipv4_config;
-        if (in.network.has_ipv4_config)
-        {
+        if (in.network.has_ipv4_config) {
             // TODO TODO
             // JsonObject ipv4_config = obj.createNestedObject("ipv4_config");
         }
@@ -128,8 +121,7 @@ void RocketFlightDB::serialiseLocalConfig(JsonDocument &doc, meshtastic_LocalCon
     }
 
     obj["has_display"] = in.has_display;
-    if (in.has_display)
-    {
+    if (in.has_display) {
         JsonObject display = obj["display"].to<JsonObject>();
         display["screen_on_secs"] = in.display.screen_on_secs;
         display["gps_format"] = getGpsFormat(in.display.gps_format);
@@ -145,8 +137,7 @@ void RocketFlightDB::serialiseLocalConfig(JsonDocument &doc, meshtastic_LocalCon
     }
 
     obj["has_lora"] = in.has_lora;
-    if (in.has_lora)
-    {
+    if (in.has_lora) {
         JsonObject lora = obj["lora"].to<JsonObject>();
         lora["use_preset"] = in.lora.use_preset;
         lora["modem_preset"] = getModemPreset(in.lora.modem_preset);
@@ -170,8 +161,7 @@ void RocketFlightDB::serialiseLocalConfig(JsonDocument &doc, meshtastic_LocalCon
     }
 
     obj["has_bluetooth"] = in.has_bluetooth;
-    if (in.has_bluetooth)
-    {
+    if (in.has_bluetooth) {
         JsonObject bluetooth = obj["bluetooth"].to<JsonObject>();
         bluetooth["enabled"] = in.bluetooth.enabled;
         bluetooth["mode"] = getPairingMode(in.bluetooth.mode);
@@ -179,18 +169,15 @@ void RocketFlightDB::serialiseLocalConfig(JsonDocument &doc, meshtastic_LocalCon
     }
 
     obj["has_security"] = in.has_security;
-    if (in.has_security)
-    {
+    if (in.has_security) {
         JsonObject security = obj["security"].to<JsonObject>();
         serialiseByteArray(security, "public_key", in.security.public_key);
         serialiseByteArray(security, "private_key", in.security.private_key);
         security["admin_key_count"] = in.security.admin_key_count;
         JsonArray admin_key = security["admin_key"].to<JsonArray>();
-        for (int n = 0; n < in.security.admin_key_count && n < 3; n++)
-        {
+        for (int n = 0; n < in.security.admin_key_count && n < 3; n++) {
             JsonArray admin_key_n = admin_key.add<JsonArray>();
-            for (int i = 0; i < in.security.admin_key[n].size; i++)
-            {
+            for (int i = 0; i < in.security.admin_key[n].size; i++) {
                 admin_key_n.add((uint8_t)in.security.admin_key[n].bytes[i]);
             }
         }
@@ -219,33 +206,27 @@ void RocketFlightDB::serialiseModuleConfig(JsonDocument &doc, meshtastic_LocalMo
     obj["has_detection_sensor"] = in.has_detection_sensor;
     obj["has_paxcounter"] = in.has_paxcounter;
 
-    if (in.has_mqtt)
-    {
+    if (in.has_mqtt) {
         // TODO TODO
         // JsonObject mqtt = obj.createNestedObject("mqtt");
     }
-    if (in.has_serial)
-    {
+    if (in.has_serial) {
         // TODO TODO
         // JsonObject serial = obj.createNestedObject("serial");
     }
-    if (in.has_external_notification)
-    {
+    if (in.has_external_notification) {
         // TODO TODO
         // JsonObject external_notification = obj.createNestedObject("external_notification");
     }
-    if (in.has_store_forward)
-    {
+    if (in.has_store_forward) {
         // TODO TODO
         // JsonObject store_forward = obj.createNestedObject("store_forward");
     }
-    if (in.has_range_test)
-    {
+    if (in.has_range_test) {
         // TODO TODO
         // JsonObject range_test = obj.createNestedObject("range_test");
     }
-    if (in.has_telemetry)
-    {
+    if (in.has_telemetry) {
         JsonObject telemetry = obj["telemetry"].to<JsonObject>();
         telemetry["device_update_interval"] = in.telemetry.device_update_interval;
         telemetry["environment_update_interval"] = in.telemetry.environment_update_interval;
@@ -257,38 +238,31 @@ void RocketFlightDB::serialiseModuleConfig(JsonDocument &doc, meshtastic_LocalMo
         telemetry["power_measurement_enabled"] = in.telemetry.power_measurement_enabled;
         telemetry["power_update_interval"] = in.telemetry.power_screen_enabled;
     }
-    if (in.has_canned_message)
-    {
+    if (in.has_canned_message) {
         // TODO TODO
         // JsonObject canned_message = obj.createNestedObject("canned_message");
     }
-    if (in.has_audio)
-    {
+    if (in.has_audio) {
         // TODO TODO
         // JsonObject audio = obj.createNestedObject("audio");
     }
-    if (in.has_remote_hardware)
-    {
+    if (in.has_remote_hardware) {
         // TODO TODO
         // JsonObject remote_hardware = obj.createNestedObject("remote_hardware");
     }
-    if (in.has_neighbor_info)
-    {
+    if (in.has_neighbor_info) {
         // TODO TODO
         // JsonObject neighbor_info = obj.createNestedObject("neighbor_info");
     }
-    if (in.has_ambient_lighting)
-    {
+    if (in.has_ambient_lighting) {
         // TODO TODO
         // JsonObject ambient_lighting = obj.createNestedObject("ambient_lighting");
     }
-    if (in.has_detection_sensor)
-    {
+    if (in.has_detection_sensor) {
         // TODO TODO
         // JsonObject detection_sensor = obj.createNestedObject("detection_sensor");
     }
-    if (in.has_paxcounter)
-    {
+    if (in.has_paxcounter) {
         // TODO TODO
         // JsonObject paxcounter = obj.createNestedObject("paxcounter");
     }
@@ -314,8 +288,7 @@ void RocketFlightDB::serialiseChannelConfig(JsonDocument &doc, meshtastic_Channe
     JsonObject obj = doc["channels"].to<JsonObject>();
     obj["channels_count"] = in.channels_count;
     JsonArray channelArr = obj["channels"].to<JsonArray>();
-    for (int n = 0; n < 8; n++)
-    {
+    for (int n = 0; n < 8; n++) {
         JsonObject channelObj = channelArr.add<JsonObject>();
         channelObj["index"] = in.channels[n].index;
         channelObj["has_settings"] = in.channels[n].has_settings;
@@ -334,7 +307,7 @@ void RocketFlightDB::serialiseChannelConfig(JsonDocument &doc, meshtastic_Channe
         moduleObj["is_client_muted"] = in.channels[n].settings.module_settings.is_client_muted;
 
         channelObj["role"] = getChannelRole(in.channels[n].role);
-    } 
+    }
     obj["version"] = in.version;
 }
 

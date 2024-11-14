@@ -23,14 +23,12 @@ JsonDocument RocketFlightDB::loadJson()
 
 pb_size_t RocketFlightDB::deserialiseByteArray(JsonArray &arr, uint8_t *out, size_t max)
 {
-    if (arr.size() > max)
-    {
+    if (arr.size() > max) {
         return 0;
     }
 
     pb_size_t count = 0;
-    for (JsonVariant value : arr)
-    {
+    for (JsonVariant value : arr) {
         out[count] = value.as<uint8_t>();
         count++;
     }
@@ -54,26 +52,14 @@ void RocketFlightDB::deserialiseLocalConfig(JsonDocument &doc, meshtastic_LocalC
     // --------------------------------------------------------------------------------
     // Device
 
-    out.device.serial_enabled =
-        obj["device"]["serial_enabled"] | out.device.serial_enabled;
-    out.device.button_gpio =
-        obj["device"]["button_gpio"] | out.device.button_gpio;
-    out.device.buzzer_gpio =
-        obj["device"]["buzzer_gpio"] | out.device.buzzer_gpio;
-    out.device.node_info_broadcast_secs =
-        obj["device"]["node_info_broadcast_secs"] |
-        out.device.node_info_broadcast_secs;
-    out.device.double_tap_as_button_press =
-        obj["device"]["double_tap_as_button_press"] |
-        out.device.double_tap_as_button_press;
-    out.device.is_managed =
-        obj["device"]["is_managed"] | out.device.is_managed;
-    out.device.disable_triple_click =
-        obj["device"]["disable_triple_click"] |
-        out.device.disable_triple_click;
-    out.device.led_heartbeat_disabled =
-        obj["device"]["led_heartbeat_disabled"] |
-        out.device.led_heartbeat_disabled;
+    out.device.serial_enabled = obj["device"]["serial_enabled"] | out.device.serial_enabled;
+    out.device.button_gpio = obj["device"]["button_gpio"] | out.device.button_gpio;
+    out.device.buzzer_gpio = obj["device"]["buzzer_gpio"] | out.device.buzzer_gpio;
+    out.device.node_info_broadcast_secs = obj["device"]["node_info_broadcast_secs"] | out.device.node_info_broadcast_secs;
+    out.device.double_tap_as_button_press = obj["device"]["double_tap_as_button_press"] | out.device.double_tap_as_button_press;
+    out.device.is_managed = obj["device"]["is_managed"] | out.device.is_managed;
+    out.device.disable_triple_click = obj["device"]["disable_triple_click"] | out.device.disable_triple_click;
+    out.device.led_heartbeat_disabled = obj["device"]["led_heartbeat_disabled"] | out.device.led_heartbeat_disabled;
 
     // Strings
     std::string temp = std::string(out.device.tzdef);
@@ -92,23 +78,24 @@ void RocketFlightDB::deserialiseLocalConfig(JsonDocument &doc, meshtastic_LocalC
     // Position
 
     out.position.position_broadcast_secs = obj["position"]["position_broadcast_secs"] | out.position.position_broadcast_secs;
-    out.position.position_broadcast_smart_enabled = obj["position"]["position_broadcast_smart_enabled"] | out.position.position_broadcast_smart_enabled;
+    out.position.position_broadcast_smart_enabled =
+        obj["position"]["position_broadcast_smart_enabled"] | out.position.position_broadcast_smart_enabled;
     out.position.fixed_position = obj["position"]["fixed_position"] | out.position.fixed_position;
     out.position.gps_enabled = obj["position"]["gps_enabled"] | out.position.gps_enabled;
     out.position.gps_update_interval = obj["position"]["gps_update_interval"] | out.position.gps_update_interval;
     out.position.rx_gpio = obj["position"]["rx_gpio"] | out.position.rx_gpio;
     out.position.tx_gpio = obj["position"]["tx_gpio"] | out.position.tx_gpio;
     out.position.gps_en_gpio = obj["position"]["gps_en_gpio"] | out.position.gps_en_gpio;
-    out.position.broadcast_smart_minimum_distance = obj["position"]["broadcast_smart_minimum_distance"] | out.position.broadcast_smart_minimum_distance;
-    out.position.broadcast_smart_minimum_interval_secs = obj["position"]["broadcast_smart_minimum_interval_secs"] | out.position.broadcast_smart_minimum_interval_secs;
+    out.position.broadcast_smart_minimum_distance =
+        obj["position"]["broadcast_smart_minimum_distance"] | out.position.broadcast_smart_minimum_distance;
+    out.position.broadcast_smart_minimum_interval_secs =
+        obj["position"]["broadcast_smart_minimum_interval_secs"] | out.position.broadcast_smart_minimum_interval_secs;
 
     // Flags
     JsonArray flags = obj["position"]["position_flags"].as<JsonArray>();
-    if (flags.size() > 0)
-    {
+    if (flags.size() > 0) {
         out.position.position_flags = meshtastic_Config_PositionConfig_PositionFlags_UNSET;
-        for (JsonVariant v : flags)
-        {
+        for (JsonVariant v : flags) {
             out.position.position_flags |= getPositionFlag(v.as<std::string>());
         }
     }
@@ -122,7 +109,8 @@ void RocketFlightDB::deserialiseLocalConfig(JsonDocument &doc, meshtastic_LocalC
     // Power
 
     out.power.is_power_saving = obj["power"]["is_power_saving"] | out.power.is_power_saving;
-    out.power.on_battery_shutdown_after_secs = obj["power"]["on_battery_shutdown_after_secs"] | out.power.on_battery_shutdown_after_secs;
+    out.power.on_battery_shutdown_after_secs =
+        obj["power"]["on_battery_shutdown_after_secs"] | out.power.on_battery_shutdown_after_secs;
     out.power.adc_multiplier_override = obj["power"]["adc_multiplier_override"] | out.power.adc_multiplier_override;
     out.power.wait_bluetooth_secs = obj["power"]["wait_bluetooth_secs"] | out.power.wait_bluetooth_secs;
     out.power.sds_secs = obj["power"]["sds_secs"] | out.power.sds_secs;
@@ -145,24 +133,16 @@ void RocketFlightDB::deserialiseLocalConfig(JsonDocument &doc, meshtastic_LocalC
 
     // Strings
     temp = std::string(out.network.wifi_ssid);
-    strlcpy(out.network.wifi_ssid,
-            obj["network"]["wifi_ssid"] | temp.c_str(),
-            sizeof(out.network.wifi_ssid));
+    strlcpy(out.network.wifi_ssid, obj["network"]["wifi_ssid"] | temp.c_str(), sizeof(out.network.wifi_ssid));
 
     temp = std::string(out.network.wifi_psk);
-    strlcpy(out.network.wifi_psk,
-            obj["network"]["wifi_psk"] | temp.c_str(),
-            sizeof(out.network.wifi_psk));
+    strlcpy(out.network.wifi_psk, obj["network"]["wifi_psk"] | temp.c_str(), sizeof(out.network.wifi_psk));
 
     temp = std::string(out.network.ntp_server);
-    strlcpy(out.network.ntp_server,
-            obj["network"]["ntp_server"] | temp.c_str(),
-            sizeof(out.network.ntp_server));
+    strlcpy(out.network.ntp_server, obj["network"]["ntp_server"] | temp.c_str(), sizeof(out.network.ntp_server));
 
     temp = std::string(out.network.rsyslog_server);
-    strlcpy(out.network.rsyslog_server,
-            obj["network"]["rsyslog_server"] | temp.c_str(),
-            sizeof(out.network.rsyslog_server));
+    strlcpy(out.network.rsyslog_server, obj["network"]["rsyslog_server"] | temp.c_str(), sizeof(out.network.rsyslog_server));
 
     // --------------------------------------------------------------------------------
     // IPV4 Config (TODO TODO IP addresses should be in [0.0.0.0] string format)
@@ -241,10 +221,10 @@ void RocketFlightDB::deserialiseLocalConfig(JsonDocument &doc, meshtastic_LocalC
 
     JsonArray admin_keys = obj["security"]["admin_key"].as<JsonArray>();
     int c = 0;
-    for (JsonVariant admin_key : admin_keys)
-    {
+    for (JsonVariant admin_key : admin_keys) {
         JsonArray admin_key_arr = admin_key.as<JsonArray>();
-        out.security.admin_key[c].size = deserialiseByteArray(admin_key_arr, out.security.admin_key[c].bytes, sizeof(out.security.admin_key[c].bytes));
+        out.security.admin_key[c].size =
+            deserialiseByteArray(admin_key_arr, out.security.admin_key[c].bytes, sizeof(out.security.admin_key[c].bytes));
         c++;
     }
 
@@ -276,13 +256,18 @@ void RocketFlightDB::deserialiseModuleConfig(JsonDocument &doc, meshtastic_Local
     // Telemetry Module
 
     out.telemetry.device_update_interval = obj["telemetry"]["device_update_interval"] | out.telemetry.device_update_interval;
-    out.telemetry.environment_update_interval = obj["telemetry"]["environment_update_interval"] | out.telemetry.environment_update_interval;
-    out.telemetry.environment_measurement_enabled = obj["telemetry"]["environment_measurement_enabled"] | out.telemetry.environment_measurement_enabled;
-    out.telemetry.environment_screen_enabled = obj["telemetry"]["environment_screen_enabled"] | out.telemetry.environment_screen_enabled;
-    out.telemetry.environment_display_fahrenheit = obj["telemetry"]["environment_display_fahrenheit"] | out.telemetry.environment_display_fahrenheit;
+    out.telemetry.environment_update_interval =
+        obj["telemetry"]["environment_update_interval"] | out.telemetry.environment_update_interval;
+    out.telemetry.environment_measurement_enabled =
+        obj["telemetry"]["environment_measurement_enabled"] | out.telemetry.environment_measurement_enabled;
+    out.telemetry.environment_screen_enabled =
+        obj["telemetry"]["environment_screen_enabled"] | out.telemetry.environment_screen_enabled;
+    out.telemetry.environment_display_fahrenheit =
+        obj["telemetry"]["environment_display_fahrenheit"] | out.telemetry.environment_display_fahrenheit;
     out.telemetry.air_quality_enabled = obj["telemetry"]["air_quality_enabled"] | out.telemetry.air_quality_enabled;
     out.telemetry.air_quality_interval = obj["telemetry"]["air_quality_interval"] | out.telemetry.air_quality_interval;
-    out.telemetry.power_measurement_enabled = obj["telemetry"]["power_measurement_enabled"] | out.telemetry.power_measurement_enabled;
+    out.telemetry.power_measurement_enabled =
+        obj["telemetry"]["power_measurement_enabled"] | out.telemetry.power_measurement_enabled;
     out.telemetry.power_update_interval = obj["telemetry"]["power_update_interval"] | out.telemetry.power_update_interval;
     out.telemetry.power_screen_enabled = obj["telemetry"]["power_screen_enabled"] | out.telemetry.power_screen_enabled;
 
@@ -332,12 +317,9 @@ void RocketFlightDB::deserialiseOwnerConfig(JsonDocument &doc, meshtastic_User &
 
     // Add a 3 digit number onto the owner name
     bool append_number = obj["append_number"] | false;
-    if (append_number)
-    {
-        snprintf(out.long_name, sizeof(out.long_name), "%s %03d",
-                 out.long_name, out.macaddr[5]);
-        snprintf(out.short_name, sizeof(out.short_name), "%s%03d",
-                 out.short_name, out.macaddr[5]);
+    if (append_number) {
+        snprintf(out.long_name, sizeof(out.long_name), "%s %03d", out.long_name, out.macaddr[5]);
+        snprintf(out.short_name, sizeof(out.short_name), "%s%03d", out.short_name, out.macaddr[5]);
     }
 
     // Enums
@@ -352,11 +334,9 @@ void RocketFlightDB::deserialiseChannelConfig(JsonDocument &doc, meshtastic_Chan
     JsonObject obj = doc["channels"].as<JsonObject>();
     out.channels_count = obj["channels_count"] | out.channels_count;
     JsonArray channelsArr = obj["channels"].as<JsonArray>();
-    for (JsonObject channelObj : channelsArr)
-    {
+    for (JsonObject channelObj : channelsArr) {
         uint8_t index = channelObj["index"].as<uint8_t>();
-        if (index < 8)
-        {
+        if (index < 8) {
             out.channels[index].index = index;
             out.channels[index].has_settings = channelObj["has_settings"] | false;
 
@@ -364,7 +344,8 @@ void RocketFlightDB::deserialiseChannelConfig(JsonDocument &doc, meshtastic_Chan
             out.channels[index].settings.channel_num = settings["channel_num"] | index;
 
             JsonArray psk = settings["psk"].as<JsonArray>();
-            out.channels[index].settings.psk.size = deserialiseByteArray(psk, out.channels[index].settings.psk.bytes, sizeof(out.channels[index].settings.psk.bytes));
+            out.channels[index].settings.psk.size =
+                deserialiseByteArray(psk, out.channels[index].settings.psk.bytes, sizeof(out.channels[index].settings.psk.bytes));
 
             strlcpy(out.channels[index].settings.name, settings["name"] | "", sizeof(out.channels[index].settings.name));
 

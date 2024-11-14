@@ -72,9 +72,9 @@ namespace graphics
 {
 
 #ifdef ROCKETFLIGHT_SCREEN
-    extern size_t getRocketFlightNodeCount();
-    extern void drawRocketFlightIconScreen(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
-    extern void drawRocketFlightNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
+extern size_t getRocketFlightNodeCount();
+extern void drawRocketFlightIconScreen(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
+extern void drawRocketFlightNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
 #endif
 
 // This means the *visible* area (sh1106 can address 132, but shows 128 for example)

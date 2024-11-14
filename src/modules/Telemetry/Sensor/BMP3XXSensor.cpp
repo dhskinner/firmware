@@ -6,11 +6,12 @@
 
 BMP3XXSensor::BMP3XXSensor()
     : TelemetrySensor(meshtastic_TelemetrySensorType_BMP3XX, "BMP3XX"),
-      Altimeter(meshtastic_TelemetrySensorType_BMP3XX, "BMP3XX", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC) {};
+      Altimeter(meshtastic_TelemetrySensorType_BMP3XX, "BMP3XX",
+                meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC){};
 
-BMP3XXSensor::~BMP3XXSensor() {};
+BMP3XXSensor::~BMP3XXSensor(){};
 
-void BMP3XXSensor::setup() {};
+void BMP3XXSensor::setup(){};
 
 int32_t BMP3XXSensor::runOnce()
 {
@@ -39,8 +40,7 @@ bool BMP3XXSensor::getMetrics(meshtastic_Telemetry *measurement)
     if (bmp3xx == nullptr)
         return false;
 
-    if ((int)measurement->which_variant == meshtastic_Telemetry_environment_metrics_tag)
-    {
+    if ((int)measurement->which_variant == meshtastic_Telemetry_environment_metrics_tag) {
         if (!bmp3xx->performReading())
             return false;
 
@@ -55,9 +55,7 @@ bool BMP3XXSensor::getMetrics(meshtastic_Telemetry *measurement)
         LOG_DEBUG("BMP3XXSensor::getMetrics id: %i temp: %.1f press %.1f", measurement->which_variant,
                   measurement->variant.environment_metrics.temperature,
                   measurement->variant.environment_metrics.barometric_pressure);
-    }
-    else
-    {
+    } else {
         LOG_DEBUG("BMP3XXSensor::getMetrics id: %i", measurement->which_variant);
     }
     return true;
@@ -92,9 +90,9 @@ BMP3XXSingleton *BMP3XXSingleton::pinstance{nullptr};
 // --------------------------------------------------------------------------------
 // Use interrupts from the DFRobot library
 
-BMP3XXSingleton::BMP3XXSingleton() : DFRobot_BMP388_I2C(&Wire, eSDOPinMode_t::eSDOGND) {};
+BMP3XXSingleton::BMP3XXSingleton() : DFRobot_BMP388_I2C(&Wire, eSDOPinMode_t::eSDOGND){};
 
-BMP3XXSingleton::~BMP3XXSingleton() {};
+BMP3XXSingleton::~BMP3XXSingleton(){};
 
 // Flag when an interrupt has been detected
 volatile static bool BMP3XX_IRQ = false;
@@ -114,15 +112,11 @@ bool BMP3XXSingleton::init()
 
     // initialise comms
     int result;
-    while (ERR_OK != (result = DFRobot_BMP388_I2C::begin()))
-    {
-        if (ERR_DATA_BUS == result)
-        {
+    while (ERR_OK != (result = DFRobot_BMP388_I2C::begin())) {
+        if (ERR_DATA_BUS == result) {
             LOG_WARN("BMP3XXSensor::begin data bus error");
             return false;
-        }
-        else if (ERR_IC_VERSION == result)
-        {
+        } else if (ERR_IC_VERSION == result) {
             LOG_WARN("BMP3XXSensor::begin chip versions do not match");
             return false;
         }
@@ -146,13 +140,8 @@ bool BMP3XXSingleton::init()
      *       When using eINTPinActiveLevelHigh (Active low interrupt pin), you need to use eINTInitialLevelLOW (Initial
      *       level of interrupt pin is high). Please use “RISING” to trigger the following interrupt.
      */
-    DFRobot_BMP388_I2C::setINTMode(eINTPinPP |
-                                   eINTPinActiveLevelHigh |
-                                   eINTLatchDIS |
-                                   eIntFWtmDis |
-                                   eINTFFullDIS |
-                                   eINTInitialLevelLOW |
-                                   eINTDataDrdyEN);
+    DFRobot_BMP388_I2C::setINTMode(eINTPinPP | eINTPinActiveLevelHigh | eINTLatchDIS | eIntFWtmDis | eINTFFullDIS |
+                                   eINTInitialLevelLOW | eINTDataDrdyEN);
 
     // Set up an interrupt pin with an internal pullup for active high
     pinMode(BMP3XX_INTERRUPT_PIN, INPUT_PULLDOWN);
@@ -160,22 +149,21 @@ bool BMP3XXSingleton::init()
 
     /**
      * 6 commonly used sampling modes that allows users to configure easily, mode:
-     *      eUltraLowPrecision, Ultra-low precision, suitable for monitoring weather (lowest power consumption), the power is mandatory mode.
-     *      eLowPrecision, Low precision, suitable for random detection, power is normal mode
-     *      eNormalPrecision1, Normal precision 1, suitable for dynamic detection on handheld devices (e.g on mobile phones), power is normal mode.
+     *      eUltraLowPrecision, Ultra-low precision, suitable for monitoring weather (lowest power consumption), the power is
+     * mandatory mode. eLowPrecision, Low precision, suitable for random detection, power is normal mode eNormalPrecision1, Normal
+     * precision 1, suitable for dynamic detection on handheld devices (e.g on mobile phones), power is normal mode.
      *      eNormalPrecision2, Normal precision 2, suitable for drones, power is normal mode.
      *      eHighPrecision, High precision, suitable for low-power handled devices (e.g mobile phones), power is in normal mode.
-     *      eUltraPrecision, Ultra-high precision, suitable for indoor navigation, its acquisition rate will be extremely low, and the acquisition cycle is 1000 ms.
+     *      eUltraPrecision, Ultra-high precision, suitable for indoor navigation, its acquisition rate will be extremely low, and
+     * the acquisition cycle is 1000 ms.
      */
-    if (!DFRobot_BMP388_I2C::setSamplingMode(eNormalPrecision2))
-    {
+    if (!DFRobot_BMP388_I2C::setSamplingMode(eNormalPrecision2)) {
         LOG_WARN("BMP3XXSensor::begin set samping mode failed");
         return false;
     }
 
     // take a couple of initial readings to settle the sensor filters
-    for (int i = 0; i < 3; i++)
-    {
+    for (int i = 0; i < 3; i++) {
         performReading();
     }
     return true;
@@ -184,8 +172,7 @@ bool BMP3XXSingleton::init()
 bool BMP3XXSingleton::performReading()
 {
     // check if there are new readings
-    if (!BMP3XX_IRQ)
-    {
+    if (!BMP3XX_IRQ) {
         return true;
     }
 
@@ -205,9 +192,9 @@ bool BMP3XXSingleton::performReading()
 // --------------------------------------------------------------------------------
 // Use forced readings from the Adafruit library
 
-BMP3XXSingleton::BMP3XXSingleton() {};
+BMP3XXSingleton::BMP3XXSingleton(){};
 
-BMP3XXSingleton::~BMP3XXSingleton() {};
+BMP3XXSingleton::~BMP3XXSingleton(){};
 
 bool BMP3XXSingleton::init()
 {
@@ -228,8 +215,7 @@ bool BMP3XXSingleton::init()
     Adafruit_BMP3XX::setOutputDataRate(BMP3_ODR_25_HZ);
 
     // take a couple of initial readings to settle the sensor filters
-    for (int i = 0; i < 3; i++)
-    {
+    for (int i = 0; i < 3; i++) {
         if (!performReading())
             return false;
     }
@@ -238,8 +224,7 @@ bool BMP3XXSingleton::init()
 
 bool BMP3XXSingleton::performReading()
 {
-    if (Adafruit_BMP3XX::performReading())
-    {
+    if (Adafruit_BMP3XX::performReading()) {
         altitudeAmslMetres = 44330.0 * (1.0 - pow((this->pressure / 100.0) / SEA_LEVEL_HPA, 0.1903));
         return true;
     }

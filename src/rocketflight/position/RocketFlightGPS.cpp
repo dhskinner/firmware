@@ -4,12 +4,15 @@
 
 #include "RocketFlightGPS.h"
 
-RocketFlightGPS::RocketFlightGPS() 
-: GPS(), Altimeter(meshtastic_TelemetrySensorType::meshtastic_TelemetrySensorType_CUSTOM_SENSOR, "GPS", meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_INTERNAL) {}   
+RocketFlightGPS::RocketFlightGPS()
+    : GPS(), Altimeter(meshtastic_TelemetrySensorType::meshtastic_TelemetrySensorType_CUSTOM_SENSOR, "GPS",
+                       meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_INTERNAL)
+{
+}
 
 int32_t RocketFlightGPS::runOnce()
 {
-    // Initialise using the base class 
+    // Initialise using the base class
     if (!GPSInitFinished) {
 
         // initialise
@@ -17,26 +20,24 @@ int32_t RocketFlightGPS::runOnce()
 
         // wake the GPS (always)
         if (!config.position.fixed_position && powerState != GPS_ACTIVE)
-        up();
+            up();
     }
 
     // Check for NMEA sentences
     if (whileActive()) {
 
-        // if we have received valid NMEA claim we are connected 
+        // if we have received valid NMEA claim we are connected
         setConnected();
 
         // if we have a new position, publish it immediately
         bool gotLoc = lookForLocation();
-        if (gotLoc)
-        {
-            if (!hasValidLocation) 
-            {
+        if (gotLoc) {
+            if (!hasValidLocation) {
                 LOG_INFO("got GPS lock");
                 hasValidLocation = true;
-            }   
+            }
             lastReceivedPositionMillis = millis();
-            shouldPublish = true;  
+            shouldPublish = true;
 
         } else if (millis() - lastReceivedPositionMillis > GPS_LOST_LOCK_MILLIS && hasValidLocation) {
             LOG_WARN("lost GPS lock");
@@ -59,13 +60,14 @@ int32_t RocketFlightGPS::runOnce()
     return GPS_THREAD_INTERVAL;
 }
 
-bool RocketFlightGPS::isValid(){
+bool RocketFlightGPS::isValid()
+{
     return (hasLock() && p.has_altitude);
 }
 
 double RocketFlightGPS::getAltitude()
 {
-    if(isValid())
+    if (isValid())
         return p.altitude;
     else
         return INVALID_ALTITUDE;
@@ -73,8 +75,8 @@ double RocketFlightGPS::getAltitude()
 
 void RocketFlightGPS::toggleGpsMode()
 {
-   // disable this just in case 
-} 
+    // disable this just in case
+}
 
 GPS *RocketFlightGPS::createGps()
 {

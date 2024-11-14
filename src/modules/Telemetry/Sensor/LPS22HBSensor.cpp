@@ -8,9 +8,14 @@
 #include <Adafruit_LPS2X.h>
 #include <Adafruit_Sensor.h>
 
-LPS22HBSensor::LPS22HBSensor() : TelemetrySensor(meshtastic_TelemetrySensorType_LPS22, "LPS22HB"), Altimeter(meshtastic_TelemetrySensorType_LPS22, "LPS22HB", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC) {}
+LPS22HBSensor::LPS22HBSensor()
+    : TelemetrySensor(meshtastic_TelemetrySensorType_LPS22, "LPS22HB"),
+      Altimeter(meshtastic_TelemetrySensorType_LPS22, "LPS22HB",
+                meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC)
+{
+}
 
-LPS22HBSensor::~LPS22HBSensor() {};
+LPS22HBSensor::~LPS22HBSensor(){};
 
 int32_t LPS22HBSensor::runOnce()
 {

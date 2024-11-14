@@ -7,9 +7,14 @@
 #include "FSCommon.h"
 #include "TelemetrySensor.h"
 
-BME680Sensor::BME680Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BME680, "BME680"), Altimeter(meshtastic_TelemetrySensorType_BME680, "BME680", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC) {}
+BME680Sensor::BME680Sensor()
+    : TelemetrySensor(meshtastic_TelemetrySensorType_BME680, "BME680"),
+      Altimeter(meshtastic_TelemetrySensorType_BME680, "BME680",
+                meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC)
+{
+}
 
-BME680Sensor::~BME680Sensor() {};
+BME680Sensor::~BME680Sensor(){};
 
 int32_t BME680Sensor::runTrigger()
 {

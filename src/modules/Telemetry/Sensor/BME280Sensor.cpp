@@ -8,9 +8,14 @@
 #include <Adafruit_BME280.h>
 #include <typeinfo>
 
-BME280Sensor::BME280Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_BME280, "BME280"), Altimeter(meshtastic_TelemetrySensorType_BME280, "BME280", meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC) {}
+BME280Sensor::BME280Sensor()
+    : TelemetrySensor(meshtastic_TelemetrySensorType_BME280, "BME280"),
+      Altimeter(meshtastic_TelemetrySensorType_BME280, "BME280",
+                meshtastic_Position_AltSource ::meshtastic_Position_AltSource_ALT_BAROMETRIC)
+{
+}
 
-BME280Sensor::~BME280Sensor() {};
+BME280Sensor::~BME280Sensor(){};
 
 int32_t BME280Sensor::runOnce()
 {
@@ -48,10 +53,10 @@ bool BME280Sensor::getMetrics(meshtastic_Telemetry *measurement)
 
 double BME280Sensor::getAltitude()
 {
-    if(!isInitialized())
+    if (!isInitialized())
         return INVALID_ALTITUDE;
 
-    if(!bme280.takeForcedMeasurement())
+    if (!bme280.takeForcedMeasurement())
         return INVALID_ALTITUDE;
 
     return Altimeter::hectopascalsToMetres(bme280.readPressure() / 100.0F);

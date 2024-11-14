@@ -3,11 +3,12 @@
 #ifdef ROCKETFLIGHT_CONFIG
 
 // --------------------------------------------------------------------------------
-// User Preferences - almost everything can be adjusted - refer to the 
+// User Preferences - almost everything can be adjusted - refer to the
 // protobuf definition files for comments on the meaning of each field
 //
 // Some notes to remember:
-// - adding oemStore.oem_aes_key will override the default channel key (and therefore you'll miss the usual unencrypted traffic from other nodes)
+// - adding oemStore.oem_aes_key will override the default channel key (and therefore you'll miss the usual unencrypted traffic
+// from other nodes)
 
 const std::string RocketFlightDB::userPrefJson PROGMEM = R"({
 "owner":{"is_licensed":false,"long_name":"RocketFlight","short_name":"R","append_number":true,"macaddr":[72,202,67,61,108,240],"hw_model":"HELTEC_WIRELESS_TRACKER","role":"TRACKER","public_key":[40,52,251,27,252,80,30,55,148,187,243,245,109,91,115,154,93,240,21,54,146,66,192,100,159,129,213,140,64,64,169,19]},

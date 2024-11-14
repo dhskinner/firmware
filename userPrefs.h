@@ -23,8 +23,8 @@
 #define ROCKETFLIGHT_CONFIG_FORCE_DEFAULT_SETTINGS 1
 #define USERPREFS_TZ_STRING "AEST-10"
 #define METERS_TO_FEET 3.28084
-#include <string>
 #include <Arduino.h>
+#include <string>
 #endif
 
 // ----------------------------------------
@@ -39,10 +39,10 @@
 #ifdef GPS_THREAD_INTERVAL
 #undef GPS_THREAD_INTERVAL
 #endif
-#define GPS_THREAD_INTERVAL 100
+#define GPS_THREAD_INTERVAL 50
 #define GPS_LOST_LOCK_MILLIS 5000
 
-#define ROCKETFLIGHT_POSITION_INTERVAL 1000
+#define ROCKETFLIGHT_POSITION_INTERVAL_MILLIS 500
 #define ROCKETFLIGHT_POSITION_POSITION_PRECISION 31
 #define ROCKETFLIGHT_MAX_CHANNEL_UTIL_PERCENT 60
 #define ROCKETFLIGHT_REFERENCE_ALTITUDE_SAMPLE_SIZE 10
@@ -51,13 +51,13 @@
 // ----------------------------------------
 #ifdef ROCKETFLIGHT_FLIGHT
 
-#define BMP3XX_INTERRUPT_PIN 46             // interrupt pin for the BMP3XX to signal a new reading
+#define BMP3XX_INTERRUPT_PIN 46 // interrupt pin for the BMP3XX to signal a new reading
 
-#define MOTION_SENSOR_CHECK_INTERVAL_MS 50  // default is 100 millis
-#define ICM_20948_MPU_GYRO_SCALE dps1000    // dps250, dps500, dps1000, dps2000
-#define ICM_20948_MPU_ACCEL_SCALE gpm16     // gpm2, gpm4, gpm8, gpm16
-#define ICM_20948_INTERRUPT_PIN 5           // interrupt pin
-#define ICM_20948_WOM_THRESHOLD 16U         // threshold for Wake on Motion Sensing (0mg to 1020mg)
+#define MOTION_SENSOR_CHECK_INTERVAL_MS 50 // default is 100 millis
+#define ICM_20948_MPU_GYRO_SCALE dps1000   // dps250, dps500, dps1000, dps2000
+#define ICM_20948_MPU_ACCEL_SCALE gpm16    // gpm2, gpm4, gpm8, gpm16
+#define ICM_20948_INTERRUPT_PIN 5          // interrupt pin
+#define ICM_20948_WOM_THRESHOLD 16U        // threshold for Wake on Motion Sensing (0mg to 1020mg)
 // #define ICM_20948_DEBUG 1                // uncomment to enable debug on Serial
 // #define ICM_20948_DMP_IS_ENABLED 1       // uncomment to enable the digital motion processor
 
@@ -69,7 +69,7 @@
 #define MESHTASTIC_EXCLUDE_MQTT 1
 #define MESHTASTIC_EXCLUDE_AUDIO 1
 #define MESHTASTIC_EXCLUDE_DETECTIONSENSOR 1
-//#define MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR 1
+// #define MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR 1
 #define MESHTASTIC_EXCLUDE_ENVIRONMENTAL_TELEMETRY 1
 #define MESHTASTIC_EXCLUDE_EXTERNALNOTIFICATION 1
 #define MESHTASTIC_EXCLUDE_PAXCOUNTER 1
@@ -88,7 +88,7 @@
 #define MESHTASTIC_EXCLUDE_AMBIENT_LIGHTING 1
 #define MESHTASTIC_EXCLUDE_VEXT_ON_OFF 1
 
-//#define EVENT_MODE 1
+// #define EVENT_MODE 1
 #define EXCLUDE_EMOJI 1
 #define SHOW_REDRAWS 1
 // #define MESHTASTIC_EXCLUDE_ADMIN 1   // TODO TODO do we need the admin module?

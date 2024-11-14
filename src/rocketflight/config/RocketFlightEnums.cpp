@@ -1,8 +1,8 @@
+#include "Channels.h"
 #include "RocketFlightDB.h"
 #include <ErriezCRC32.h>
 #include <map>
 #include <string>
-#include "Channels.h"
 
 #ifdef ROCKETFLIGHT_CONFIG
 
@@ -11,25 +11,19 @@ static bool IsNotNull(std::string key)
     return (key.size() > 0 && key.compare("null") != 0);
 }
 
-meshtastic_Config_DeviceConfig_RebroadcastMode
-RocketFlightDB::getRebroadcastMode(std::string key)
+meshtastic_Config_DeviceConfig_RebroadcastMode RocketFlightDB::getRebroadcastMode(std::string key)
 {
-    static std::map<std::string, meshtastic_Config_DeviceConfig_RebroadcastMode>
-        values = {
-            {"ALL", meshtastic_Config_DeviceConfig_RebroadcastMode_ALL},
-            {"ALL_SKIP_DECODING",
-             meshtastic_Config_DeviceConfig_RebroadcastMode_ALL_SKIP_DECODING},
-            {"LOCAL_ONLY",
-             meshtastic_Config_DeviceConfig_RebroadcastMode_LOCAL_ONLY},
-            {"KNOWN_ONLY",
-             meshtastic_Config_DeviceConfig_RebroadcastMode_KNOWN_ONLY}};
+    static std::map<std::string, meshtastic_Config_DeviceConfig_RebroadcastMode> values = {
+        {"ALL", meshtastic_Config_DeviceConfig_RebroadcastMode_ALL},
+        {"ALL_SKIP_DECODING", meshtastic_Config_DeviceConfig_RebroadcastMode_ALL_SKIP_DECODING},
+        {"LOCAL_ONLY", meshtastic_Config_DeviceConfig_RebroadcastMode_LOCAL_ONLY},
+        {"KNOWN_ONLY", meshtastic_Config_DeviceConfig_RebroadcastMode_KNOWN_ONLY}};
 
     auto value = values.find(key);
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config setting for RebroadcastMode is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DeviceConfig_RebroadcastMode_ALL;
@@ -54,8 +48,7 @@ meshtastic_Config_DeviceConfig_Role RocketFlightDB::getDeviceRole(std::string ke
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for Device Role is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DeviceConfig_Role_CLIENT;
@@ -80,8 +73,7 @@ meshtastic_Config_PositionConfig_PositionFlags RocketFlightDB::getPositionFlag(s
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for position flags is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_PositionConfig_PositionFlags_UNSET;
@@ -98,8 +90,7 @@ meshtastic_Config_PositionConfig_GpsMode RocketFlightDB::getGpsMode(std::string 
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for GPS mode is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_PositionConfig_GpsMode_ENABLED;
@@ -115,8 +106,7 @@ meshtastic_Config_NetworkConfig_AddressMode RocketFlightDB::getAddressMode(std::
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for network mode is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_NetworkConfig_AddressMode_DHCP;
@@ -136,8 +126,7 @@ meshtastic_Config_DisplayConfig_GpsCoordinateFormat RocketFlightDB::getGpsFormat
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for GPS coord format is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_GpsCoordinateFormat_DEC;
@@ -153,8 +142,7 @@ meshtastic_Config_DisplayConfig_DisplayUnits RocketFlightDB::getDisplayUnits(std
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for display units is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_DisplayUnits_METRIC;
@@ -172,8 +160,7 @@ meshtastic_Config_DisplayConfig_OledType RocketFlightDB::getOledType(std::string
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for OLED type is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_OledType_OLED_AUTO;
@@ -191,8 +178,7 @@ meshtastic_Config_DisplayConfig_DisplayMode RocketFlightDB::getDisplayMode(std::
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for OLED display mode is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT;
@@ -214,8 +200,7 @@ meshtastic_Config_DisplayConfig_CompassOrientation RocketFlightDB::getCompassOri
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for compass orientation is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_DisplayConfig_CompassOrientation_DEGREES_0;
@@ -224,32 +209,22 @@ meshtastic_Config_DisplayConfig_CompassOrientation RocketFlightDB::getCompassOri
 meshtastic_Config_LoRaConfig_RegionCode RocketFlightDB::getRegionCode(std::string key)
 {
     static std::map<std::string, meshtastic_Config_LoRaConfig_RegionCode> values = {
-        {"UNSET", meshtastic_Config_LoRaConfig_RegionCode_UNSET},
-        {"US", meshtastic_Config_LoRaConfig_RegionCode_US},
-        {"EU_433", meshtastic_Config_LoRaConfig_RegionCode_EU_433},
-        {"EU_868", meshtastic_Config_LoRaConfig_RegionCode_EU_868},
-        {"CN", meshtastic_Config_LoRaConfig_RegionCode_CN},
-        {"JP", meshtastic_Config_LoRaConfig_RegionCode_JP},
-        {"ANZ", meshtastic_Config_LoRaConfig_RegionCode_ANZ},
-        {"KR", meshtastic_Config_LoRaConfig_RegionCode_KR},
-        {"TW", meshtastic_Config_LoRaConfig_RegionCode_TW},
-        {"RU", meshtastic_Config_LoRaConfig_RegionCode_RU},
-        {"IN", meshtastic_Config_LoRaConfig_RegionCode_IN},
-        {"NZ_865", meshtastic_Config_LoRaConfig_RegionCode_NZ_865},
-        {"TH", meshtastic_Config_LoRaConfig_RegionCode_TH},
-        {"LORA_24", meshtastic_Config_LoRaConfig_RegionCode_LORA_24},
-        {"UA_433", meshtastic_Config_LoRaConfig_RegionCode_UA_433},
-        {"UA_868", meshtastic_Config_LoRaConfig_RegionCode_UA_868},
-        {"MY_433", meshtastic_Config_LoRaConfig_RegionCode_MY_433},
-        {"MY_919", meshtastic_Config_LoRaConfig_RegionCode_MY_919},
+        {"UNSET", meshtastic_Config_LoRaConfig_RegionCode_UNSET},   {"US", meshtastic_Config_LoRaConfig_RegionCode_US},
+        {"EU_433", meshtastic_Config_LoRaConfig_RegionCode_EU_433}, {"EU_868", meshtastic_Config_LoRaConfig_RegionCode_EU_868},
+        {"CN", meshtastic_Config_LoRaConfig_RegionCode_CN},         {"JP", meshtastic_Config_LoRaConfig_RegionCode_JP},
+        {"ANZ", meshtastic_Config_LoRaConfig_RegionCode_ANZ},       {"KR", meshtastic_Config_LoRaConfig_RegionCode_KR},
+        {"TW", meshtastic_Config_LoRaConfig_RegionCode_TW},         {"RU", meshtastic_Config_LoRaConfig_RegionCode_RU},
+        {"IN", meshtastic_Config_LoRaConfig_RegionCode_IN},         {"NZ_865", meshtastic_Config_LoRaConfig_RegionCode_NZ_865},
+        {"TH", meshtastic_Config_LoRaConfig_RegionCode_TH},         {"LORA_24", meshtastic_Config_LoRaConfig_RegionCode_LORA_24},
+        {"UA_433", meshtastic_Config_LoRaConfig_RegionCode_UA_433}, {"UA_868", meshtastic_Config_LoRaConfig_RegionCode_UA_868},
+        {"MY_433", meshtastic_Config_LoRaConfig_RegionCode_MY_433}, {"MY_919", meshtastic_Config_LoRaConfig_RegionCode_MY_919},
         {"SG_923", meshtastic_Config_LoRaConfig_RegionCode_SG_923}};
 
     auto value = values.find(key);
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for region code is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_LoRaConfig_RegionCode_UNSET;
@@ -272,8 +247,7 @@ meshtastic_Config_LoRaConfig_ModemPreset RocketFlightDB::getModemPreset(std::str
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for modem preset is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_LoRaConfig_ModemPreset_LONG_FAST;
@@ -290,8 +264,7 @@ meshtastic_Config_BluetoothConfig_PairingMode RocketFlightDB::getPairingMode(std
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for bluetooth pairing is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Config_BluetoothConfig_PairingMode_RANDOM_PIN;
@@ -299,17 +272,15 @@ meshtastic_Config_BluetoothConfig_PairingMode RocketFlightDB::getPairingMode(std
 
 meshtastic_Channel_Role RocketFlightDB::getChannelRole(std::string key)
 {
-    static std::map<std::string, meshtastic_Channel_Role> values = {
-        {"DISABLED", meshtastic_Channel_Role_DISABLED},
-        {"PRIMARY", meshtastic_Channel_Role_PRIMARY},
-        {"SECONDARY", meshtastic_Channel_Role_SECONDARY}};
+    static std::map<std::string, meshtastic_Channel_Role> values = {{"DISABLED", meshtastic_Channel_Role_DISABLED},
+                                                                    {"PRIMARY", meshtastic_Channel_Role_PRIMARY},
+                                                                    {"SECONDARY", meshtastic_Channel_Role_SECONDARY}};
 
     auto value = values.find(key);
     if (value != values.end())
         return value->second;
 
-    if (IsNotNull(key))
-    {
+    if (IsNotNull(key)) {
         LOG_ERROR("Config for channel role is unknown - could not find '%s'", key.c_str());
     }
     return meshtastic_Channel_Role_DISABLED;
@@ -336,11 +307,9 @@ meshtastic_Channel_Role RocketFlightDB::getChannelRole(std::string key)
 
 // --------------------------------------------------------------------------------
 
-std::string
-RocketFlightDB::getRebroadcastMode(meshtastic_Config_DeviceConfig_RebroadcastMode key)
+std::string RocketFlightDB::getRebroadcastMode(meshtastic_Config_DeviceConfig_RebroadcastMode key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_DeviceConfig_RebroadcastMode_ALL:
         return "ALL";
     case meshtastic_Config_DeviceConfig_RebroadcastMode_ALL_SKIP_DECODING:
@@ -356,8 +325,7 @@ RocketFlightDB::getRebroadcastMode(meshtastic_Config_DeviceConfig_RebroadcastMod
 
 std::string RocketFlightDB::getDeviceRole(meshtastic_Config_DeviceConfig_Role key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_DeviceConfig_Role_CLIENT:
         return "CLIENT";
     case meshtastic_Config_DeviceConfig_Role_CLIENT_MUTE:
@@ -387,8 +355,7 @@ std::string RocketFlightDB::getDeviceRole(meshtastic_Config_DeviceConfig_Role ke
 
 std::string RocketFlightDB::getPositionFlag(meshtastic_Config_PositionConfig_PositionFlags key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_PositionConfig_PositionFlags_UNSET:
         return "UNSET";
     case meshtastic_Config_PositionConfig_PositionFlags_ALTITUDE:
@@ -418,8 +385,7 @@ std::string RocketFlightDB::getPositionFlag(meshtastic_Config_PositionConfig_Pos
 
 std::string RocketFlightDB::getGpsMode(meshtastic_Config_PositionConfig_GpsMode key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_PositionConfig_GpsMode_DISABLED:
         return "DISABLED";
     case meshtastic_Config_PositionConfig_GpsMode_ENABLED:
@@ -433,8 +399,7 @@ std::string RocketFlightDB::getGpsMode(meshtastic_Config_PositionConfig_GpsMode 
 
 std::string RocketFlightDB::getAddressMode(meshtastic_Config_NetworkConfig_AddressMode key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_NetworkConfig_AddressMode_DHCP:
         return "DHCP";
     case meshtastic_Config_NetworkConfig_AddressMode_STATIC:
@@ -446,8 +411,7 @@ std::string RocketFlightDB::getAddressMode(meshtastic_Config_NetworkConfig_Addre
 
 std::string RocketFlightDB::getGpsFormat(meshtastic_Config_DisplayConfig_GpsCoordinateFormat key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_DisplayConfig_GpsCoordinateFormat_DEC:
         return "DEC";
     case meshtastic_Config_DisplayConfig_GpsCoordinateFormat_DMS:
@@ -467,8 +431,7 @@ std::string RocketFlightDB::getGpsFormat(meshtastic_Config_DisplayConfig_GpsCoor
 
 std::string RocketFlightDB::getDisplayUnits(meshtastic_Config_DisplayConfig_DisplayUnits key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_DisplayConfig_DisplayUnits_METRIC:
         return "METRIC";
     case meshtastic_Config_DisplayConfig_DisplayUnits_IMPERIAL:
@@ -480,8 +443,7 @@ std::string RocketFlightDB::getDisplayUnits(meshtastic_Config_DisplayConfig_Disp
 
 std::string RocketFlightDB::getOledType(meshtastic_Config_DisplayConfig_OledType key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_DisplayConfig_OledType_OLED_AUTO:
         return "OLED_AUTO";
     case meshtastic_Config_DisplayConfig_OledType_OLED_SSD1306:
@@ -497,8 +459,7 @@ std::string RocketFlightDB::getOledType(meshtastic_Config_DisplayConfig_OledType
 
 std::string RocketFlightDB::getDisplayMode(meshtastic_Config_DisplayConfig_DisplayMode key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_DisplayConfig_DisplayMode_DEFAULT:
         return "DEFAULT";
     case meshtastic_Config_DisplayConfig_DisplayMode_TWOCOLOR:
@@ -514,8 +475,7 @@ std::string RocketFlightDB::getDisplayMode(meshtastic_Config_DisplayConfig_Displ
 
 std::string RocketFlightDB::getCompassOrientation(meshtastic_Config_DisplayConfig_CompassOrientation key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_DisplayConfig_CompassOrientation_DEGREES_0:
         return "DEGREES_0";
     case meshtastic_Config_DisplayConfig_CompassOrientation_DEGREES_90:
@@ -539,8 +499,7 @@ std::string RocketFlightDB::getCompassOrientation(meshtastic_Config_DisplayConfi
 
 std::string RocketFlightDB::getRegionCode(meshtastic_Config_LoRaConfig_RegionCode key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_LoRaConfig_RegionCode_UNSET:
         return "UNSET";
     case meshtastic_Config_LoRaConfig_RegionCode_US:
@@ -586,8 +545,7 @@ std::string RocketFlightDB::getRegionCode(meshtastic_Config_LoRaConfig_RegionCod
 
 std::string RocketFlightDB::getModemPreset(meshtastic_Config_LoRaConfig_ModemPreset key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_LoRaConfig_ModemPreset_LONG_FAST:
         return "LONG_FAST";
     case meshtastic_Config_LoRaConfig_ModemPreset_LONG_SLOW:
@@ -613,8 +571,7 @@ std::string RocketFlightDB::getModemPreset(meshtastic_Config_LoRaConfig_ModemPre
 
 std::string RocketFlightDB::getPairingMode(meshtastic_Config_BluetoothConfig_PairingMode key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Config_BluetoothConfig_PairingMode_RANDOM_PIN:
         return "RANDOM_PIN";
     case meshtastic_Config_BluetoothConfig_PairingMode_FIXED_PIN:
@@ -628,8 +585,7 @@ std::string RocketFlightDB::getPairingMode(meshtastic_Config_BluetoothConfig_Pai
 
 std::string RocketFlightDB::getChannelRole(meshtastic_Channel_Role key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_Channel_Role_DISABLED:
         return "DISABLED";
     case meshtastic_Channel_Role_PRIMARY:
@@ -659,8 +615,7 @@ std::string RocketFlightDB::getChannelRole(meshtastic_Channel_Role key)
 
 std::string RocketFlightDB::getHardwareModel(meshtastic_HardwareModel key)
 {
-    switch (key)
-    {
+    switch (key) {
     case meshtastic_HardwareModel_UNSET:
         return "UNSET";
     case meshtastic_HardwareModel_TLORA_V2:

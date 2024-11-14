@@ -1,8 +1,8 @@
 #include "RocketFlightDB.h"
+#include "Channels.h"
 #include <ErriezCRC32.h>
 #include <map>
 #include <string>
-#include "Channels.h"
 
 #ifdef ROCKETFLIGHT_CONFIG
 
@@ -23,7 +23,7 @@ void NodeDB::loadFromJson()
     uint32_t configCRC = crc32Buffer(&config, sizeof(config));
     uint32_t moduleCRC = crc32Buffer(&moduleConfig, sizeof(moduleConfig));
     uint32_t channelFileCRC = crc32Buffer(&channelFile, sizeof(channelFile));
-    
+
     JsonDocument doc = RocketFlightDB::loadJson();
     RocketFlightDB::deserialiseOwnerConfig(doc, owner);
     RocketFlightDB::deserialiseLocalConfig(doc, config);
@@ -60,9 +60,8 @@ void RocketFlightDB::printJson()
     // Generate the JSON printout
     DEBUG_PORT.println("--------------------------------------------------------------------------------");
     serializeJsonPretty(doc, DEBUG_PORT);
-    //serializeJson(doc, DEBUG_PORT);
+    // serializeJson(doc, DEBUG_PORT);
     DEBUG_PORT.println("\n--------------------------------------------------------------------------------");
-
 }
 
 #endif

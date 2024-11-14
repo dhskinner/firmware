@@ -149,7 +149,7 @@ uint8_t kb_model;
 
 // The I2C address of the RTC Module (if found)
 ScanI2C::DeviceAddress rtc_found = ScanI2C::ADDRESS_NONE;
-#ifdef ROCKETFLIGHT_POSITION
+#if defined(ROCKETFLIGHT_POSITION) || defined(ROCKETFLIGHT_FLIGHT)
 // The I2C address of the Accelerometer (if found)
 ScanI2C::FoundDevice accelerometer_found = ScanI2C::DEVICE_NONE;
 // The I2C address of the Altimeter (if found)
@@ -578,7 +578,7 @@ void setup()
 #endif
 
 #if !defined(ARCH_PORTDUINO) && !defined(ARCH_STM32WL)
-#ifdef ROCKETFLIGHT_POSITION
+#if defined(ROCKETFLIGHT_POSITION) || defined(ROCKETFLIGHT_FLIGHT)
     altimeter_found = i2cScanner->firstAltimeter();
     LOG_DEBUG("alt_info = %i", altimeter_found.type);
     accelerometer_found = i2cScanner->firstAccelerometer();
@@ -708,7 +708,7 @@ void setup()
 
 #if !MESHTASTIC_EXCLUDE_I2C
 #if !defined(ARCH_PORTDUINO) && !defined(ARCH_STM32WL)
-#ifdef ROCKETFLIGHT_POSITION
+#if defined(ROCKETFLIGHT_POSITION) || defined(ROCKETFLIGHT_FLIGHT)
     if (accelerometer_found.type != ScanI2C::DeviceType::NONE) {
         accelerometerThread = new AccelerometerThread(accelerometer_found.type);
     }
@@ -793,7 +793,7 @@ void setup()
 #ifdef ROCKETFLIGHT_POSITION
                 gps = RocketFlightGPS::createGps();
 #else
-                gps = GPS::createGps();
+            gps = GPS::createGps();
 #endif
                 if (gps) {
                     gpsStatus->observe(&gps->newStatus);

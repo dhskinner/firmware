@@ -4,12 +4,12 @@
 
 #include "configuration.h"
 
-#include <cmath>
-#include <limits>
-#include <Wire.h>
+#include "detect/ScanI2C.h"
 #include "meshtastic/localonly.pb.h"
 #include "meshtastic/telemetry.pb.h"
-#include "detect/ScanI2C.h"
+#include <Wire.h>
+#include <cmath>
+#include <limits>
 
 #define SEA_LEVEL_HPA 1013.2
 #define INVALID_ALTITUDE std::numeric_limits<double>::min()
@@ -20,9 +20,10 @@ extern meshtastic_LocalConfig config;
 // Base class for altimeters
 class Altimeter
 {
-public:
+  public:
     explicit Altimeter();
-    explicit Altimeter(meshtastic_TelemetrySensorType sensor, const char *sensorName, meshtastic_Position_AltSource source, double alt = INVALID_ALTITUDE);
+    explicit Altimeter(meshtastic_TelemetrySensorType sensor, const char *sensorName, meshtastic_Position_AltSource source,
+                       double alt = INVALID_ALTITUDE);
 
     // Return true if a valid altitude reading is available
     virtual bool isValid();
@@ -40,9 +41,9 @@ public:
     static double hectopascalsToMetres(double pressureHpa, double qfe = SEA_LEVEL_HPA);
 
     // Return the sensor name
-    virtual inline const char * name() { return label; };
+    virtual inline const char *name() { return label; };
 
-protected:
+  protected:
     const char *label;
     double referenceAltitude = INVALID_ALTITUDE;
     double manualAltitude = INVALID_ALTITUDE;
@@ -53,4 +54,3 @@ protected:
 };
 
 #endif
-

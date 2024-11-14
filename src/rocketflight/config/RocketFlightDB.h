@@ -2,12 +2,12 @@
 #ifndef _ROCKETFLIGHT_DB_H_
 #define _ROCKETFLIGHT_DB_H_
 
+#include "Channels.h"
+#include "Default.h"
+#include "NodeDB.h"
+#include <ErriezCRC32.h>
 #include <map>
 #include <string>
-#include <ErriezCRC32.h>
-#include "NodeDB.h"
-#include "Default.h"
-#include "Channels.h"
 
 #ifdef ROCKETFLIGHT_CONFIG
 
@@ -15,8 +15,7 @@
 
 class RocketFlightDB
 {
-public:
-
+  public:
     static void printJson();
     static JsonDocument loadJson();
     static const std::string userPrefJson;
@@ -33,8 +32,7 @@ public:
     static void serialiseChannelConfig(JsonDocument &doc, meshtastic_ChannelFile &in);
     static void serialiseModuleConfig(JsonDocument &doc, meshtastic_LocalModuleConfig &in);
 
-    template <typename T>
-    static void serialiseByteArray(JsonObject &obj, std::string key, T &in);
+    template <typename T> static void serialiseByteArray(JsonObject &obj, std::string key, T &in);
 
     static meshtastic_Config_DeviceConfig_RebroadcastMode getRebroadcastMode(std::string key);
     static meshtastic_Config_DeviceConfig_Role getDeviceRole(std::string key);

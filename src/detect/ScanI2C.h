@@ -1,8 +1,8 @@
 #pragma once
 
+#include "configuration.h"
 #include <stddef.h>
 #include <stdint.h>
-#include "configuration.h"
 
 class ScanI2C
 {

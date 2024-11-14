@@ -337,8 +337,8 @@ class GPS : private concurrency::OSThread
     GnssModel_t gnssModel = GNSS_MODEL_UNKNOWN;
 
 #ifdef ROCKETFLIGHT_POSITION
-    public:
-      inline virtual Altimeter* asAltimeter() {return nullptr;}
+  public:
+    inline virtual Altimeter *asAltimeter() { return nullptr; }
 #endif
 };
 

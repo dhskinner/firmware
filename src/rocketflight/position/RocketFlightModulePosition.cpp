@@ -19,11 +19,9 @@ bool RocketFlightModule::init()
 
     // get an altimeter if one is available
 #if !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR
-    switch (altimeter_found.type)
-    {
+    switch (altimeter_found.type) {
     case ScanI2C::DeviceType::BME_680:
-        if (bme680Sensor.hasSensor())
-        {
+        if (bme680Sensor.hasSensor()) {
             if (!bme680Sensor.isInitialized())
                 bme680Sensor.runOnce();
             if (bme680Sensor.isInitialized())
@@ -31,8 +29,7 @@ bool RocketFlightModule::init()
         }
         break;
     case ScanI2C::DeviceType::BME_280:
-        if (bme280Sensor.hasSensor())
-        {
+        if (bme280Sensor.hasSensor()) {
             if (!bme280Sensor.isInitialized())
                 bme280Sensor.runOnce();
             if (bme280Sensor.isInitialized())
@@ -40,8 +37,7 @@ bool RocketFlightModule::init()
         }
         break;
     case ScanI2C::DeviceType::BMP_280:
-        if (bmp280Sensor.hasSensor())
-        {
+        if (bmp280Sensor.hasSensor()) {
             altimeter = &bmp280Sensor;
             if (!bmp280Sensor.isInitialized())
                 bmp280Sensor.runOnce();
@@ -50,8 +46,7 @@ bool RocketFlightModule::init()
         }
         break;
     case ScanI2C::DeviceType::BMP_085:
-        if (bmp085Sensor.hasSensor())
-        {
+        if (bmp085Sensor.hasSensor()) {
 
             if (!bmp085Sensor.isInitialized())
                 bmp085Sensor.runOnce();
@@ -60,8 +55,7 @@ bool RocketFlightModule::init()
         }
         break;
     case ScanI2C::DeviceType::BMP_3XX:
-        if (bmp3xxSensor.hasSensor())
-        {
+        if (bmp3xxSensor.hasSensor()) {
             if (!bmp3xxSensor.isInitialized())
                 bmp3xxSensor.runOnce();
             if (bmp3xxSensor.isInitialized())
@@ -69,8 +63,7 @@ bool RocketFlightModule::init()
         }
         break;
     case ScanI2C::DeviceType::LPS22HB:
-        if (lps22hbSensor.hasSensor())
-        {
+        if (lps22hbSensor.hasSensor()) {
             if (!lps22hbSensor.isInitialized())
                 lps22hbSensor.runOnce();
             if (lps22hbSensor.isInitialized())
@@ -79,27 +72,28 @@ bool RocketFlightModule::init()
         break;
     default:
         // is there a manual position?
-        if (config.position.fixed_position)
-        {
-            altimeter = new Altimeter(meshtastic_TelemetrySensorType::meshtastic_TelemetrySensorType_CUSTOM_SENSOR, "Fixed", meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_MANUAL, static_cast<double>(localPosition.altitude));
+        if (config.position.fixed_position) {
+            altimeter = new Altimeter(meshtastic_TelemetrySensorType::meshtastic_TelemetrySensorType_CUSTOM_SENSOR, "Fixed",
+                                      meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_MANUAL,
+                                      static_cast<double>(localPosition.altitude));
             break;
         }
 #ifdef ROCKETFLIGHT_POSITION
         // is Rocketflight GPS available?
-        if (gps != nullptr)
-        {
+        if (gps != nullptr) {
             altimeter = gps->asAltimeter();
             break;
         }
 #endif
         // fallback to nothing
-        altimeter = new Altimeter(meshtastic_TelemetrySensorType::meshtastic_TelemetrySensorType_SENSOR_UNSET, "None", meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_UNSET);
+        altimeter = new Altimeter(meshtastic_TelemetrySensorType::meshtastic_TelemetrySensorType_SENSOR_UNSET, "None",
+                                  meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_UNSET);
         break;
     }
     LOG_INFO("Altimeter type: %s status: %s", altimeter->name(), altimeter->isValid() ? "ok" : "failed");
 
     // start sending positions immediately
-    setIntervalFromNow(ROCKETFLIGHT_POSITION_INTERVAL);
+    setIntervalFromNow(ROCKETFLIGHT_POSITION_INTERVAL_MILLIS);
 
     return true;
 }
@@ -110,45 +104,41 @@ int32_t RocketFlightModule::runOnce()
     if (sleepOnNextExecution == true)
         deepSleep();
 
-    // Get info for own node
-    meshtastic_NodeInfoLite *node = nodeDB->getMeshNode(nodeDB->getNodeNum());
-    if (node == nullptr)
-    {
-        LOG_DEBUG("RunOnce could not get own node");
-        return ROCKETFLIGHT_POSITION_INTERVAL;
-    }
-
-    // Only send packets if the channel util. is less than a given threshold
-    if (!airTime->isTxAllowedChannelUtil(config.device.role != meshtastic_Config_DeviceConfig_Role_TRACKER &&
-                                         config.device.role != meshtastic_Config_DeviceConfig_Role_TAK_TRACKER))
-    {
-        LOG_DEBUG("Skipped sending due to channel congestion");
-        return ROCKETFLIGHT_POSITION_INTERVAL;
-    }
-
     // Only send every n milliseconds
     uint32_t now = millis();
-    if ((now - lastGpsSend) < minimumTimeThreshold)
-    {
-        return ROCKETFLIGHT_POSITION_INTERVAL;
+    if ((now - lastGpsSend) < minimumTimeThreshold) {
+        return ROCKETFLIGHT_POSITION_INTERVAL_MILLIS;
     }
 
     // If in smart position mode, send every n metres up to a maximum of n milliseconds
-    if (config.position.position_broadcast_smart_enabled 
-    && ((now - lastGpsSend) < maximumTimeThreshold) && !hasMoved())
-    {
-        return ROCKETFLIGHT_POSITION_INTERVAL;
+    if (config.position.position_broadcast_smart_enabled && ((now - lastGpsSend) < maximumTimeThreshold) && !hasMoved()) {
+        return ROCKETFLIGHT_POSITION_INTERVAL_MILLIS;
+    }
+
+    // TODO TODO TODO
+    // // Get info for own node
+    // meshtastic_NodeInfoLite *node = nodeDB->getMeshNode(nodeDB->getNodeNum());
+    // if (node == nullptr)
+    // {
+    //     LOG_DEBUG("RunOnce could not get own node");
+    //     return ROCKETFLIGHT_POSITION_INTERVAL;
+    // }
+
+    // Only send packets if the channel util. is less than a given threshold
+    if (!airTime->isTxAllowedChannelUtil(config.device.role != meshtastic_Config_DeviceConfig_Role_TRACKER &&
+                                         config.device.role != meshtastic_Config_DeviceConfig_Role_TAK_TRACKER)) {
+        LOG_DEBUG("Skipped sending due to channel congestion");
+        return ROCKETFLIGHT_POSITION_INTERVAL_MILLIS;
     }
 
     // Send it
     sendOurPosition();
-    if (config.device.role == meshtastic_Config_DeviceConfig_Role_LOST_AND_FOUND)
-    {
+    if (config.device.role == meshtastic_Config_DeviceConfig_Role_LOST_AND_FOUND) {
         sendLostAndFoundText();
     }
 
-    LOG_DEBUG("Will run again in %d msec", ROCKETFLIGHT_POSITION_INTERVAL);
-    return ROCKETFLIGHT_POSITION_INTERVAL;
+    LOG_DEBUG("Will run again in %d msec", ROCKETFLIGHT_POSITION_INTERVAL_MILLIS);
+    return ROCKETFLIGHT_POSITION_INTERVAL_MILLIS;
 }
 
 void RocketFlightModule::handleNewPosition()
@@ -172,31 +162,24 @@ meshtastic_MeshPacket *RocketFlightModule::allocReply()
     meshtastic_Position p = meshtastic_Position_init_default;
 
     // if localPosition is totally empty, put our last saved position (lite) in there
-    if (localPosition.latitude_i == 0 && localPosition.longitude_i == 0)
-    {
+    if (localPosition.latitude_i == 0 && localPosition.longitude_i == 0) {
         nodeDB->setLocalPosition(TypeConversions::ConvertToPosition(node->position));
     }
     localPosition.seq_number++;
 
     // lat/lon are included if available
-    if (localPosition.latitude_i == 0 && localPosition.longitude_i == 0)
-    {
+    if (localPosition.latitude_i == 0 && localPosition.longitude_i == 0) {
         LOG_WARN("Position is unknown - lat/lon are zero");
-    }
-    else
-    {
+    } else {
         LOG_DEBUG("Sending location with precision %i", precision);
-        if (precision < 32 && precision > 0)
-        {
+        if (precision < 32 && precision > 0) {
             p.latitude_i = localPosition.latitude_i & (UINT32_MAX << (32 - precision));
             p.longitude_i = localPosition.longitude_i & (UINT32_MAX << (32 - precision));
 
             // We want the imprecise position to be the middle of the possible location, not quantized at the edges
             p.latitude_i += (1 << (31 - precision));
             p.longitude_i += (1 << (31 - precision));
-        }
-        else
-        {
+        } else {
             p.latitude_i = localPosition.latitude_i;
             p.longitude_i = localPosition.longitude_i;
         }
@@ -205,20 +188,17 @@ meshtastic_MeshPacket *RocketFlightModule::allocReply()
         p.has_longitude_i = true;
         p.time = getValidTime(RTCQualityNTP) > 0 ? getValidTime(RTCQualityNTP) : localPosition.time;
 
-        if (config.position.fixed_position)
-        {
+        if (config.position.fixed_position) {
             p.location_source = meshtastic_Position_LocSource_LOC_MANUAL;
         }
     }
 
     // altitude is included if available (rocketflight module ignores )
-    if ((pos_flags & meshtastic_Config_PositionConfig_PositionFlags_ALTITUDE) && (altimeter != nullptr))
-    {
-        if (altimeter->isValid())
-        {
-            if(pos_flags & meshtastic_Config_PositionConfig_PositionFlags_ALTITUDE_MSL)
+    if ((pos_flags & meshtastic_Config_PositionConfig_PositionFlags_ALTITUDE) && (altimeter != nullptr)) {
+        if (altimeter->isValid()) {
+            if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_ALTITUDE_MSL)
                 // Add AMSL altitude
-                p.altitude = (int32_t)std::round(altimeter->getAltitude() );
+                p.altitude = (int32_t)std::round(altimeter->getAltitude());
             else
                 // Usually rocketry people want AGL altitude, which is offset from a ground reference
                 p.altitude = (int32_t)std::round(altimeter->getAltitude() - altimeter->getReferenceAltitude());
@@ -226,36 +206,30 @@ meshtastic_MeshPacket *RocketFlightModule::allocReply()
             p.altitude_source = altimeter->getAltitudeSource();
             p.has_altitude = true;
 
-            if (p.altitude_source == meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_INTERNAL 
-                || p.altitude_source == meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_EXTERNAL)
-            {
+            if (p.altitude_source == meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_INTERNAL ||
+                p.altitude_source == meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_EXTERNAL) {
                 // add GPS HAE and geoidal separation info if we are using GPS
                 // if (!pos_flags & meshtastic_Config_PositionConfig_PositionFlags_ALTITUDE_MSL)
                 // {
                 //     p.altitude_hae = localPosition.altitude_hae;
                 //     p.has_altitude_hae = p.altitude_hae != 0;
                 // }
-                if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_GEOIDAL_SEPARATION)
-                {
+                if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_GEOIDAL_SEPARATION) {
                     p.altitude_geoidal_separation = localPosition.altitude_geoidal_separation;
                     p.has_altitude_geoidal_separation = p.altitude_geoidal_separation != 0;
                 }
             }
         }
     }
-    if (p.has_altitude)
-    {
+    if (p.has_altitude) {
         lastAltitudeSent = p.altitude;
     }
 
-    if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_DOP)
-    {
-        if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_HVDOP)
-        {
+    if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_DOP) {
+        if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_HVDOP) {
             p.HDOP = localPosition.HDOP;
             p.VDOP = localPosition.VDOP;
-        }
-        else
+        } else
             p.PDOP = localPosition.PDOP;
     }
 
@@ -268,13 +242,11 @@ meshtastic_MeshPacket *RocketFlightModule::allocReply()
     if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_SEQ_NO)
         p.seq_number = localPosition.seq_number;
 
-    if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_HEADING)
-    {
+    if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_HEADING) {
         p.ground_track = localPosition.ground_track;
         p.has_ground_track = true;
     }
-    if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_SPEED)
-    {
+    if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_SPEED) {
         p.ground_speed = localPosition.ground_speed;
         p.has_ground_speed = true;
     }
@@ -282,13 +254,10 @@ meshtastic_MeshPacket *RocketFlightModule::allocReply()
     // Strip out any time information before sending packets to other nodes - to keep the wire size small (and because other
     // nodes shouldn't trust it anyways) Note: we allow a device with a local GPS or NTP to include the time, so that devices
     // without can get time.
-    if (getRTCQuality() < RTCQualityNTP)
-    {
+    if (getRTCQuality() < RTCQualityNTP) {
         LOG_DEBUG("Stripping time %u from position send", p.time);
         p.time = 0;
-    }
-    else
-    {
+    } else {
         p.time = getValidTime(RTCQualityNTP);
         LOG_DEBUG("Providing time to mesh %u", p.time);
     }
@@ -296,8 +265,7 @@ meshtastic_MeshPacket *RocketFlightModule::allocReply()
     LOG_INFO("Position: time=%i lat=%i lon=%i alt=%i", p.time, p.latitude_i, p.longitude_i, p.altitude);
 
     // Set the current coords as our last ones, after we've compared distance with current and decided to send
-    if (p.latitude_i != 0 && p.longitude_i != 0)
-    {
+    if (p.latitude_i != 0 && p.longitude_i != 0) {
         lastGpsLatitude = node->position.latitude_i;
         lastGpsLongitude = node->position.longitude_i;
     }
@@ -322,11 +290,11 @@ bool RocketFlightModule::hasMoved()
 
     // Determine the distance in meters between two points on the globe
     uint32_t distanceTraveled = 0;
-    if (hasValidPosition(node))
-    {
+    if (hasValidPosition(node)) {
         meshtastic_PositionLite currentPosition = node->position;
-        distanceTraveled = abs(std::round(GeoCoord::latLongToMeter(
-            lastGpsLatitude * 1e-7, lastGpsLongitude * 1e-7, currentPosition.latitude_i * 1e-7, currentPosition.longitude_i * 1e-7)));
+        distanceTraveled =
+            abs(std::round(GeoCoord::latLongToMeter(lastGpsLatitude * 1e-7, lastGpsLongitude * 1e-7,
+                                                    currentPosition.latitude_i * 1e-7, currentPosition.longitude_i * 1e-7)));
     }
 
     // Get the altitude travelled
@@ -334,16 +302,13 @@ bool RocketFlightModule::hasMoved()
     uint32_t elapsed = millis() - lastGpsSend;
     if (altimeter->isValid())
         altitudeTravelled = abs((int32_t)std::round(altimeter->getAltitude()) - lastAltitudeSent);
-    
-    // Has position moved?
-    bool moved = distanceTraveled > config.position.broadcast_smart_minimum_distance || altitudeTravelled > config.position.broadcast_smart_minimum_distance;
 
-    LOG_DEBUG("Moved: %s horiz: %dm vert: %dm threshold: %dm elapsed: %dms ",
-              moved ? "yes" : "no",
-              distanceTraveled,
-              altitudeTravelled,
-              config.position.broadcast_smart_minimum_distance,
-              elapsed);
+    // Has position moved?
+    bool moved = distanceTraveled > config.position.broadcast_smart_minimum_distance ||
+                 altitudeTravelled > config.position.broadcast_smart_minimum_distance;
+
+    LOG_DEBUG("Moved: %s horiz: %dm vert: %dm threshold: %dm elapsed: %dms ", moved ? "yes" : "no", distanceTraveled,
+              altitudeTravelled, config.position.broadcast_smart_minimum_distance, elapsed);
     return moved;
 }
 

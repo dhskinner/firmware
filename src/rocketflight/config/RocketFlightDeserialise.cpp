@@ -8,6 +8,9 @@ extern meshtastic_ChannelFile channelFile;
 extern meshtastic_User &owner;
 extern std::string rocketFlightConfig;
 
+namespace RocketFlight
+{
+
 JsonDocument RocketFlightDB::loadJson()
 {
     // Allocate a temporary JsonDocument
@@ -362,5 +365,7 @@ void RocketFlightDB::deserialiseChannelConfig(JsonDocument &doc, meshtastic_Chan
     }
     out.version = obj["version"] | out.version;
 }
+
+} // namespace RocketFlight
 
 #endif

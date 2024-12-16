@@ -34,6 +34,9 @@ class Altimeter
     // Calculate and return the reference altitude, based on when the unit weas first initialised
     virtual double getReferenceAltitude();
 
+    // Return the maximum altitude in metres above AMSL
+    virtual double getAltitudeMax();
+
     // Ger the source for altitude measurements
     virtual meshtastic_Position_AltSource getAltitudeSource();
 
@@ -47,6 +50,7 @@ class Altimeter
     const char *label;
     double referenceAltitude = INVALID_ALTITUDE;
     double manualAltitude = INVALID_ALTITUDE;
+    double altitudeAmslMetresMax = INVALID_ALTITUDE;
     std::vector<double> referenceAltitudeSamples;
     unsigned long referenceAltitudeNextSample = 0;
     meshtastic_TelemetrySensorType sensor = meshtastic_TelemetrySensorType_SENSOR_UNSET;

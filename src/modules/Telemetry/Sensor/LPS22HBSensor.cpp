@@ -59,7 +59,11 @@ double LPS22HBSensor::getAltitude()
     if (pressure.pressure == 0)
         return INVALID_ALTITUDE;
 
-    return Altimeter::hectopascalsToMetres(pressure.pressure);
+    double altitudeAmslMetres = Altimeter::hectopascalsToMetres(pressure.pressure / 100.0F);
+    if (altitudeAmslMetres > altitudeAmslMetresMax)
+        altitudeAmslMetresMax = altitudeAmslMetres;
+
+    return altitudeAmslMetres;
 }
 
 #endif

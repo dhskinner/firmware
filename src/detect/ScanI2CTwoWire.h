@@ -49,10 +49,13 @@ class ScanI2CTwoWire : public ScanI2C
     typedef uint8_t ResponseWidth;
 
 #ifdef ROCKETFLIGHT_POSITION
-    std::map<ScanI2C::DeviceAddress, ScanI2C::DeviceType> foundDevices = {{ ScanI2C::ADDRESS_NONE, ScanI2C::DeviceType::NONE }};
-    std::map<ScanI2C::DeviceType, ScanI2C::DeviceAddress> deviceAddresses = {
-        { ScanI2C::DeviceType::NONE,
-          ScanI2C::ADDRESS_NONE }};
+    // TODO
+    // std::map<ScanI2C::DeviceAddress, ScanI2C::DeviceType> foundDevices = {{ ScanI2C::ADDRESS_NONE, ScanI2C::DeviceType::NONE }};
+    // std::map<ScanI2C::DeviceType, ScanI2C::DeviceAddress> deviceAddresses = {
+    //     { ScanI2C::DeviceType::NONE,
+    //       ScanI2C::ADDRESS_NONE }};
+    std::map<ScanI2C::DeviceAddress, ScanI2C::DeviceType> foundDevices = {};
+    std::map<ScanI2C::DeviceType, ScanI2C::DeviceAddress> deviceAddresses = {};
 #else
     std::map<ScanI2C::DeviceAddress, ScanI2C::DeviceType> foundDevices;
 

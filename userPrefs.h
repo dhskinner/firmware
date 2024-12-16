@@ -31,6 +31,7 @@
 #ifdef ROCKETFLIGHT_SCREEN
 #define METERS_TO_FEET 3.28084
 #define USERPREFS_HAS_SPLASH 1
+#define ROCKETFLIGHT_ALTERNATE_DISPLAY_MILLIS 3000
 #endif
 
 // ----------------------------------------
@@ -51,8 +52,12 @@
 // ----------------------------------------
 #ifdef ROCKETFLIGHT_FLIGHT
 
-#define BMP3XX_INTERRUPT_PIN 46 // interrupt pin for the BMP3XX to signal a new reading
+#define BMP3XX_INTERRUPT_PIN 46  // interrupt pin for the BMP3XX to signal a new reading
+//#define BMP3XX_INTERRUPT_PIN 6  // interrupt pin for the BMP3XX to signal a new reading
 
+#ifdef MOTION_SENSOR_CHECK_INTERVAL_MS 
+#undef MOTION_SENSOR_CHECK_INTERVAL_MS
+#endif
 #define MOTION_SENSOR_CHECK_INTERVAL_MS 50 // default is 100 millis
 #define ICM_20948_MPU_GYRO_SCALE dps1000   // dps250, dps500, dps1000, dps2000
 #define ICM_20948_MPU_ACCEL_SCALE gpm16    // gpm2, gpm4, gpm8, gpm16

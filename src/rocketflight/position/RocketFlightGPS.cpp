@@ -4,6 +4,9 @@
 
 #include "RocketFlightGPS.h"
 
+namespace RocketFlight
+{
+
 RocketFlightGPS::RocketFlightGPS()
     : GPS(), Altimeter(meshtastic_TelemetrySensorType::meshtastic_TelemetrySensorType_CUSTOM_SENSOR, "GPS",
                        meshtastic_Position_AltSource::meshtastic_Position_AltSource_ALT_INTERNAL)
@@ -68,7 +71,11 @@ bool RocketFlightGPS::isValid()
 double RocketFlightGPS::getAltitude()
 {
     if (isValid())
+    {
+        if (p.altitude > altitudeAmslMetresMax)
+            altitudeAmslMetresMax = p.altitude;
         return p.altitude;
+    }
     else
         return INVALID_ALTITUDE;
 };
@@ -168,5 +175,7 @@ GPS *RocketFlightGPS::createGps()
     }
     return new_gps;
 }
+
+} // namespace RocketFlight
 
 #endif // Exclude GPS

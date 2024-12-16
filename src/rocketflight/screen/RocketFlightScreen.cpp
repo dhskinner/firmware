@@ -4,6 +4,8 @@
 
 #ifdef ROCKETFLIGHT_SCREEN
 
+#include "RocketFlightIcon.h"
+
 #define SCREEN_WIDTH display->getWidth()
 #define SCREEN_HEIGHT display->getHeight()
 #define getStringCenteredX(s) ((SCREEN_WIDTH - display->getStringWidth(s)) / 2)
@@ -21,7 +23,7 @@ void drawRocketFlightIconScreen(OLEDDisplay *display, OLEDDisplayUiState *state,
 {
     // draw a fullscreen xbm image centered left to right and top to bottom
     display->drawXbm(x + (SCREEN_WIDTH - icon_width) / 2, y + (SCREEN_HEIGHT - icon_height) / 2, icon_width, icon_height,
-                     (const uint8_t *)icon_bits);
+                     (const uint8_t *)RocketFlight::icon_bits);
 
     // draw region in the upper left
     String region = myRegion ? String(myRegion->name) : "";
@@ -110,13 +112,13 @@ void drawRocketFlightNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, i
     display->drawString(x, textY, lastStr);
     textY += FONT_HEIGHT_SMALL;
 
-    // draw the signal strength, or display hops away if more than 0 hops away.
-    if (node->hops_away > 0)
-        snprintf(buffer, sizeof(buffer), "Hops away: %d", node->hops_away);
-    else
-        snprintf(buffer, sizeof(buffer), "Signal: %d%%", clamp((int)((node->snr + 10) * 5), 0, 100));
-    display->drawString(x, textY, buffer);
-    textY += FONT_HEIGHT_SMALL;
+    // // draw the signal strength, or display hops away if more than 0 hops away.
+    // if (node->hops_away > 0)
+    //     snprintf(buffer, sizeof(buffer), "Hops away: %d", node->hops_away);
+    // else
+    //     snprintf(buffer, sizeof(buffer), "Signal: %d%%", clamp((int)((node->snr + 10) * 5), 0, 100));
+    // display->drawString(x, textY, buffer);
+    // textY += FONT_HEIGHT_SMALL;
 
     // get dimensions and coordinates for the compass/circle
     int16_t compassX = 0, compassY = 0;
@@ -126,13 +128,15 @@ void drawRocketFlightNodeInfo(OLEDDisplay *display, OLEDDisplayUiState *state, i
 
     // draw the altitude
     if (node->has_position) {
-        // snprintf(buffer, sizeof(buffer), "Altitude: %d ft", node->position.altitude * METERS_TO_FEET);
-        // display->drawString(x, textY, buffer);
-        // textY += FONT_HEIGHT_SMALL;
-        display->setFont(FONT_MEDIUM);
-        display->setTextAlignment(TEXT_ALIGN_CENTER);
-        snprintf(buffer, sizeof(buffer), "%.0fft", static_cast<double>(node->position.altitude) * METERS_TO_FEET);
-        display->drawString(compassX, y, buffer);
+        
+        snprintf(buffer, sizeof(buffer), "Alt: %d ft", node->position.altitude * METERS_TO_FEET);
+        display->drawString(x, textY, buffer);
+        textY += FONT_HEIGHT_SMALL;
+
+        // display->setFont(FONT_MEDIUM);
+        // display->setTextAlignment(TEXT_ALIGN_CENTER);
+        // snprintf(buffer, sizeof(buffer), "%.0fft", static_cast<double>(node->position.altitude) * METERS_TO_FEET);
+        // display->drawString(compassX, y, buffer);
 
         display->setFont(FONT_SMALL);
         display->setTextAlignment(TEXT_ALIGN_LEFT);

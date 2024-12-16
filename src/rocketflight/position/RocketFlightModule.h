@@ -6,9 +6,10 @@
 
 #ifdef ROCKETFLIGHT_POSITION
 
-#include "../motion/ICM20948Sensor.h"
 #include "Channels.h"
+#include "GeoCoord.h"
 #include "MeshService.h"
+#include "PowerStatus.h"
 #include "RTC.h"
 #include "TypeConversions.h"
 #include "graphics/ScreenFonts.h"
@@ -50,6 +51,9 @@ extern BME680Sensor bme680Sensor;
 extern BMP3XXSensor bmp3xxSensor;
 extern LPS22HBSensor lps22hbSensor;
 #endif
+
+namespace RocketFlight
+{
 
 // RocketFlightModule replaces PositionModule to perform asynchronous (low rate) tasks
 class RocketFlightModule : public PositionModule
@@ -98,6 +102,10 @@ class RocketFlightModule : public PositionModule
     // Internal heartbeat status
     bool heartbeat = false;
 
+    // Internal counters to show primary and alternate display
+    bool alternateScreen = false;
+    unsigned long alternateScreenMillis = 0;
+
     // Prepare a position report to send - same functionality as PositionModule
     // except using barometric altitude AMSL (GPS altitude is only used as a fallback)
     virtual meshtastic_MeshPacket *allocReply() override;
@@ -133,10 +141,12 @@ class RocketFlightModule : public PositionModule
     static void drawGPS(OLEDDisplay *display, int16_t x, int16_t y, const meshtastic::GPSStatus *gps);
 
     // Draw the current altitude
-    static void drawAltitude(OLEDDisplay *display, int16_t x, int16_t y, double altitude);
+    static void drawAltitude(OLEDDisplay *display, int16_t x, int16_t y, double altitude, String showPrefix, bool showDecimal);
 
 #endif
 };
+
+} // namespace RocketFlight
 
 #endif
 

@@ -24,11 +24,11 @@ void NodeDB::loadFromJson()
     uint32_t moduleCRC = crc32Buffer(&moduleConfig, sizeof(moduleConfig));
     uint32_t channelFileCRC = crc32Buffer(&channelFile, sizeof(channelFile));
 
-    JsonDocument doc = RocketFlightDB::loadJson();
-    RocketFlightDB::deserialiseOwnerConfig(doc, owner);
-    RocketFlightDB::deserialiseLocalConfig(doc, config);
-    RocketFlightDB::deserialiseModuleConfig(doc, moduleConfig);
-    RocketFlightDB::deserialiseChannelConfig(doc, channelFile);
+    JsonDocument doc = RocketFlight::RocketFlightDB::loadJson();
+    RocketFlight::RocketFlightDB::deserialiseOwnerConfig(doc, owner);
+    RocketFlight::RocketFlightDB::deserialiseLocalConfig(doc, config);
+    RocketFlight::RocketFlightDB::deserialiseModuleConfig(doc, moduleConfig);
+    RocketFlight::RocketFlightDB::deserialiseChannelConfig(doc, channelFile);
 
     int saveWhat = 0;
     if (ownerCRC != crc32Buffer(&owner, sizeof(owner)))
@@ -41,10 +41,13 @@ void NodeDB::loadFromJson()
         saveWhat |= SEGMENT_CHANNELS;
     if (saveWhat) {
         LOG_WARN("RocketFlight found config changes - saving new config files\n");
-        RocketFlightDB::printJson();
+        RocketFlight::RocketFlightDB::printJson();
         saveToDisk(saveWhat);
     }
 }
+
+namespace RocketFlight
+{
 
 void RocketFlightDB::printJson()
 {
@@ -63,5 +66,7 @@ void RocketFlightDB::printJson()
     // serializeJson(doc, DEBUG_PORT);
     DEBUG_PORT.println("\n--------------------------------------------------------------------------------");
 }
+
+} // namespace RocketFlight
 
 #endif

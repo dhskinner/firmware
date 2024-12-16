@@ -44,6 +44,9 @@ bool BMP3XXSensor::getMetrics(meshtastic_Telemetry *measurement)
         if (!bmp3xx->performReading())
             return false;
 
+    if (bmp3xx->altitudeAmslMetres > altitudeAmslMetresMax)
+        altitudeAmslMetresMax = bmp3xx->altitudeAmslMetres;
+        
         measurement->variant.environment_metrics.has_temperature = true;
         measurement->variant.environment_metrics.has_barometric_pressure = true;
         measurement->variant.environment_metrics.has_relative_humidity = false;
@@ -69,6 +72,9 @@ double BMP3XXSensor::getAltitude()
     if (!bmp3xx->performReading())
         return INVALID_ALTITUDE;
 
+    if (bmp3xx->altitudeAmslMetres > altitudeAmslMetresMax)
+        altitudeAmslMetresMax = bmp3xx->altitudeAmslMetres;
+
     return bmp3xx->altitudeAmslMetres;
 }
 
@@ -90,6 +96,8 @@ BMP3XXSingleton *BMP3XXSingleton::pinstance{nullptr};
 // --------------------------------------------------------------------------------
 // Use interrupts from the DFRobot library
 
+// TODO TODO TODO
+//BMP3XXSingleton::BMP3XXSingleton() : DFRobot_BMP388_I2C(&Wire, eSDOPinMode_t::eSDOVDD){};
 BMP3XXSingleton::BMP3XXSingleton() : DFRobot_BMP388_I2C(&Wire, eSDOPinMode_t::eSDOGND){};
 
 BMP3XXSingleton::~BMP3XXSingleton(){};

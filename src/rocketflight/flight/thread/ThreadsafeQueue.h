@@ -1,9 +1,17 @@
 // C++ implementation of a thread safe queue from
 // https://www.geeksforgeeks.org/implement-thread-safe-queue-in-c/
+
+#pragma once
+#ifndef _ROCKETFLIGHT_QUEUE_H_
+#define _ROCKETFLIGHT_QUEUE_H_
+
 #include <condition_variable>
 #include <iostream>
 #include <mutex>
 #include <queue>
+
+namespace RocketFlight
+{
 
 // Thread-safe queue
 template <typename T> class TSQueue
@@ -52,3 +60,7 @@ template <typename T> class TSQueue
         return item;
     }
 };
+
+} // namespace RocketFlight
+
+#endif

@@ -52,7 +52,11 @@ double BMP085Sensor::getAltitude()
     if (pressure == 0)
         return INVALID_ALTITUDE;
 
-    return Altimeter::hectopascalsToMetres(pressure / 100.0F);
+    double altitudeAmslMetres = Altimeter::hectopascalsToMetres(pressure / 100.0F);
+    if (altitudeAmslMetres > altitudeAmslMetresMax)
+        altitudeAmslMetresMax = altitudeAmslMetres;
+
+    return altitudeAmslMetres;
 }
 
 #endif

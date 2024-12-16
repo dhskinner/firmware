@@ -59,6 +59,10 @@ double BME280Sensor::getAltitude()
     if (!bme280.takeForcedMeasurement())
         return INVALID_ALTITUDE;
 
-    return Altimeter::hectopascalsToMetres(bme280.readPressure() / 100.0F);
+    double altitudeAmslMetres = Altimeter::hectopascalsToMetres(bme280.readPressure() / 100.0F);
+    if (altitudeAmslMetres > altitudeAmslMetresMax)
+        altitudeAmslMetresMax = altitudeAmslMetres;
+
+    return altitudeAmslMetres;
 }
 #endif

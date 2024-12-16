@@ -2,6 +2,9 @@
 
 #ifdef ROCKETFLIGHT_POSITION
 
+namespace RocketFlight
+{
+
 bool RocketFlightModule::wantUIFrame()
 {
     return true;
@@ -27,6 +30,7 @@ void RocketFlightModule::drawFrame(OLEDDisplay *display, OLEDDisplayUiState *sta
     |  -------                      . . . . . . .                                  |
     --------------------------------------------------------------------------------
 
+    TODO TODO TODO
     change the node display to show altitude and whatnot
     does admin mode disable the app?
     add buzzer
@@ -69,15 +73,30 @@ void RocketFlightModule::drawFrame(OLEDDisplay *display, OLEDDisplayUiState *sta
 
     // Display altitude and mode
     if (altimeter == nullptr) {
-        drawAltitude(display, x, y + FONT_HEIGHT_SMALL, 0.0);
+        drawAltitude(display, x, y + FONT_HEIGHT_SMALL, 0.0, "", true);
         drawText(display, x + display->getWidth() - 1, y + FONT_HEIGHT_SMALL, TEXT_ALIGN_RIGHT, "No Alt");
     } else {
         uint32_t pos_flags = config.position.position_flags;
         String level = "AMSL";
+        String prefix = "";
+        double altitude = altimeter->getAltitude();
+
+        if (millis() > alternateScreenMillis){
+            alternateScreen = !alternateScreen;
+            alternateScreenMillis += ROCKETFLIGHT_ALTERNATE_DISPLAY_MILLIS;
+            if (alternateScreenMillis < millis())
+                alternateScreenMillis += millis();
+        }
+
+        if (alternateScreen) {
+            prefix = "max ";
+            altitude = altimeter->getAltitudeMax();
+        }
+        
         if (pos_flags & meshtastic_Config_PositionConfig_PositionFlags_ALTITUDE_MSL) {
-            drawAltitude(display, x, y + FONT_HEIGHT_SMALL, altimeter->getAltitude());
+            drawAltitude(display, x, y + FONT_HEIGHT_SMALL, altitude, prefix, !alternateScreen);
         } else {
-            drawAltitude(display, x, y + FONT_HEIGHT_SMALL, altimeter->getAltitude() - altimeter->getReferenceAltitude());
+            drawAltitude(display, x, y + FONT_HEIGHT_SMALL, altitude - altimeter->getReferenceAltitude(), prefix, !alternateScreen);
             level = "AGL";
         }
 
@@ -97,17 +116,11 @@ void RocketFlightModule::drawFrame(OLEDDisplay *display, OLEDDisplayUiState *sta
         };
     }
 
-    // Display a pixel each time a GPS position is received
-
     // Display a heartbeat pixel that blinks every time the frame is redrawn
     if (heartbeat) {
         display->drawRect(display->getWidth() - 2, 0, 2, 2);
     }
     heartbeat = !heartbeat;
-
-    // Draw any log messages
-    // drawChannelName(display, x, y + FONT_HEIGHT_SMALL);
-    // display->drawLogBuffer(x, y + (FONT_HEIGHT_SMALL * 2));
 }
 
 extern uint8_t imgBattery[];
@@ -202,16 +215,23 @@ void RocketFlightModule::drawGPS(OLEDDisplay *display, int16_t x, int16_t y, con
     }
 }
 
-void RocketFlightModule::drawAltitude(OLEDDisplay *display, int16_t x, int16_t y, double altitude)
+void RocketFlightModule::drawAltitude(OLEDDisplay *display, int16_t x, int16_t y, double altitude, String showPrefix, bool showDecimal)
 {
     char altitudeStr[10];
     if (altitude != INVALID_ALTITUDE) {
+        if(showDecimal) {
         if (config.display.units == meshtastic_Config_DisplayConfig_DisplayUnits_IMPERIAL)
-            snprintf(altitudeStr, sizeof(altitudeStr), "%0.1fft", altitude * METERS_TO_FEET);
+            snprintf(altitudeStr, sizeof(altitudeStr), "%s%0.1fft", showPrefix, altitude * METERS_TO_FEET);
         else
-            snprintf(altitudeStr, sizeof(altitudeStr), "%0.1fm", altitude);
+            snprintf(altitudeStr, sizeof(altitudeStr), "%s%0.1fm", showPrefix, altitude);
+        } else {
+        if (config.display.units == meshtastic_Config_DisplayConfig_DisplayUnits_IMPERIAL)
+            snprintf(altitudeStr, sizeof(altitudeStr), "%s%0.0fft", showPrefix, altitude * METERS_TO_FEET);
+        else
+            snprintf(altitudeStr, sizeof(altitudeStr), "%s%0.0fm", showPrefix, altitude);   
+        }
     } else {
-        snprintf(altitudeStr, sizeof(altitudeStr), "--.--");
+        snprintf(altitudeStr, sizeof(altitudeStr), "%s--.--", showPrefix);
     }
     display->setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
     display->setFont(FONT_LARGE);
@@ -225,6 +245,7 @@ void RocketFlightModule::drawText(OLEDDisplay *display, int16_t x, int16_t y, OL
     display->setFont(FONT_SMALL);
     display->setTextAlignment(textAlignment);
     display->drawString(x, y, text);
+}
 }
 
 #endif

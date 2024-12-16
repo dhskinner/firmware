@@ -68,20 +68,8 @@ int32_t ICM20948Sensor::runOnce()
 // ICM20948Singleton
 // ----------------------------------------------------------------------
 
-// Get a singleton wrapper for an Sparkfun ICM_20948_I2C
-ICM20948Singleton *ICM20948Singleton::GetInstance()
-{
-    if (pinstance == nullptr) {
-        pinstance = new ICM20948Singleton();
-    }
-    return pinstance;
-}
-
 ICM20948Singleton::ICM20948Singleton() {}
-
-ICM20948Singleton::~ICM20948Singleton() {}
-
-ICM20948Singleton *ICM20948Singleton::pinstance{nullptr};
+//ICM20948Singleton::~ICM20948Singleton() {}
 
 // Initialise the ICM20948 Sensor
 bool ICM20948Singleton::init(ScanI2C::FoundDevice device)

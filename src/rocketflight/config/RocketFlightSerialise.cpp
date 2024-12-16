@@ -11,6 +11,9 @@ extern meshtastic_LocalModuleConfig moduleConfig;
 extern meshtastic_ChannelFile channelFile;
 extern meshtastic_User &owner;
 
+namespace RocketFlight
+{
+
 template <typename T> void RocketFlightDB::serialiseByteArray(JsonObject &obj, std::string key, T &in)
 {
     JsonArray array = obj[key].to<JsonArray>();
@@ -310,5 +313,7 @@ void RocketFlightDB::serialiseChannelConfig(JsonDocument &doc, meshtastic_Channe
     }
     obj["version"] = in.version;
 }
+
+} // namespace RocketFlight
 
 #endif

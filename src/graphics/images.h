@@ -205,7 +205,7 @@ static unsigned char poo[] PROGMEM = {
 #endif
 
 #ifdef ROCKETFLIGHT_SCREEN
-#include "rocketflight/screen/RocketFlight.xbm"
+#include "rocketflight/screen/RocketFlightIcon.h"
 #else
 #include "img/icon.xbm"
 #endif

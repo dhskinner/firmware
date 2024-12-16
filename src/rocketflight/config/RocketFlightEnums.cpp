@@ -6,6 +6,9 @@
 
 #ifdef ROCKETFLIGHT_CONFIG
 
+namespace RocketFlight
+{
+
 static bool IsNotNull(std::string key)
 {
     return (key.size() > 0 && key.compare("null") != 0);
@@ -790,5 +793,7 @@ std::string RocketFlightDB::getHardwareModel(meshtastic_HardwareModel key)
         return "UNKNOWN";
     }
 }
+
+} // namespace RocketFlight
 
 #endif

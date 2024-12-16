@@ -2,6 +2,9 @@
 
 #ifdef ROCKETFLIGHT_POSITION
 
+namespace RocketFlight
+{
+
 RocketFlightModule::RocketFlightModule() : PositionModule::PositionModule()
 {
     // set up this module for rocketry
@@ -318,6 +321,7 @@ void RocketFlightModule::deepSleep()
     uint32_t nightyNightMs = Default::getConfiguredOrDefaultMs(config.position.position_broadcast_secs);
     LOG_DEBUG("Deep sleeping for %ims, then awaking to send position again.", nightyNightMs);
     doDeepSleep(nightyNightMs, false);
+}
 }
 
 #endif

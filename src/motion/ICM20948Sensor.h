@@ -42,7 +42,7 @@
 #endif
 
 // The I2C address of the Accelerometer (if found) from main.cpp
-#ifdef ROCKETFLIGHT_POSITION
+#if defined(ROCKETFLIGHT_POSITION) || defined(ROCKETFLIGHT_FLIGHT)
 extern ScanI2C::FoundDevice accelerometer_found;
 #else
 extern ScanI2C::DeviceAddress accelerometer_found;
@@ -51,22 +51,22 @@ extern ScanI2C::DeviceAddress accelerometer_found;
 // Singleton wrapper for the Sparkfun ICM_20948_I2C class
 class ICM20948Singleton : public ICM_20948_I2C
 {
-  private:
-    static ICM20948Singleton *pinstance;
-
   protected:
     ICM20948Singleton();
-    ~ICM20948Singleton();
-
+    // ~ICM20948Singleton();
+    
   public:
-    // Create a singleton instance (not thread safe)
-    static ICM20948Singleton *GetInstance();
 
-    // Singletons should not be cloneable.
-    ICM20948Singleton(ICM20948Singleton &other) = delete;
+    // Create a singleton instance (thread safe)
+    static inline std::shared_ptr<ICM20948Singleton> GetInstance()
+    {
+        static std::shared_ptr<ICM20948Singleton> s{new ICM20948Singleton};
+        return s;
+    }
 
-    // Singletons should not be assignable.
-    void operator=(const ICM20948Singleton &) = delete;
+    // Singletons should not be cloneable or assignable
+    ICM20948Singleton(ICM20948Singleton const &) = delete;
+    void operator=(ICM20948Singleton const &) = delete;
 
     // Initialise the motion sensor singleton for normal operation
     bool init(ScanI2C::FoundDevice device);
@@ -83,7 +83,7 @@ class ICM20948Singleton : public ICM_20948_I2C
 class ICM20948Sensor : public MotionSensor
 {
   private:
-    ICM20948Singleton *sensor = nullptr;
+    std::shared_ptr<ICM20948Singleton> sensor;
 
   public:
     explicit ICM20948Sensor(ScanI2C::FoundDevice foundDevice);

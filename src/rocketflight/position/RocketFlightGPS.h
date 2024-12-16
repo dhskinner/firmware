@@ -10,6 +10,9 @@
 #include "meshUtils.h"
 #include "modules/Telemetry/Sensor/Altimeter.h"
 
+namespace RocketFlight
+{
+
 /**
  * A gps class that reads position and keeps the gps powered up (does not sleep)
  *
@@ -39,6 +42,8 @@ class RocketFlightGPS : private GPS, public Altimeter
 };
 
 extern GPS *gps;
+
+} // namespace RocketFlight
 
 #endif // Exclude GPS
 

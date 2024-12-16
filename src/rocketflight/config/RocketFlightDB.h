@@ -13,6 +13,9 @@
 
 #include <ArduinoJson.h>
 
+namespace RocketFlight
+{
+
 class RocketFlightDB
 {
   public:
@@ -69,6 +72,8 @@ class RocketFlightDB
     // static std::string getScreenFont(meshtastic_ScreenFonts key);
     static std::string getHardwareModel(meshtastic_HardwareModel key);
 };
+
+} // namespace RocketFlight
 
 #endif
 

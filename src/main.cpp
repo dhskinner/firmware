@@ -2,7 +2,7 @@
 #include "configuration.h"
 #if !MESHTASTIC_EXCLUDE_GPS
 #ifdef ROCKETFLIGHT_POSITION
-#include "rocketflight/gps/RocketFlightGPS.h"
+#include "rocketflight/position/RocketFlightGPS.h"
 #else
 #include "GPS.h"
 #endif
@@ -483,6 +483,7 @@ void setup()
         LOG_INFO("No I2C devices found");
     } else {
         LOG_INFO("%i I2C devices found", i2cCount);
+        
 #ifdef SENSOR_GPS_CONFLICT
         sensor_detected = true;
 #endif
@@ -791,7 +792,7 @@ void setup()
             if (config.device.role != meshtastic_Config_DeviceConfig_Role_REPEATER &&
                 config.position.gps_mode != meshtastic_Config_PositionConfig_GpsMode_NOT_PRESENT) {
 #ifdef ROCKETFLIGHT_POSITION
-                gps = RocketFlightGPS::createGps();
+                gps = RocketFlight::RocketFlightGPS::createGps();
 #else
             gps = GPS::createGps();
 #endif

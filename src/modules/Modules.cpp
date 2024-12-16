@@ -30,7 +30,7 @@
 #endif
 #if !MESHTASTIC_EXCLUDE_GPS
 #ifdef ROCKETFLIGHT_POSITION
-#include "rocketflight/module/RocketflightModule.h"
+#include "rocketflight/position/RocketflightModule.h"
 #else
 #include "modules/PositionModule.h"
 #endif
@@ -114,7 +114,7 @@ void setupModules()
 #endif
 #if !MESHTASTIC_EXCLUDE_GPS
 #ifdef ROCKETFLIGHT_POSITION
-        positionModule = new RocketFlightModule();
+        positionModule = new RocketFlight::RocketFlightModule();
 #else
         positionModule = new PositionModule();
 #endif

@@ -16,6 +16,10 @@ double Altimeter::getAltitude()
     return manualAltitude;
 };
 
+double Altimeter::getAltitudeMax() {
+    return altitudeAmslMetresMax;
+}
+
 bool Altimeter::isValid()
 {
     // this should be overridden in child class
